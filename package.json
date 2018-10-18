@@ -1,0 +1,28 @@
+{
+  "name": "react-admin-auto",
+  "version": "1.0.0",
+  "description": "An addition to react-admin that creates automatic list, show, edit and create views",
+  "main": "main.js",
+  "scripts": {
+    "build": "rm ./lib/* && tsc",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "main.js",
+    "lib",
+    "LICENSE"
+  ],
+  "types": "./lib/AutoAdmin.d.ts",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mongoose": "^5.2.19",
+    "@types/react": "^16.4.18",
+    "mongoose": "^5.3.4",
+    "react": "^16.5.2",
+    "react-admin": "^2.4.0",
+    "typescript": "^3.1.3"
+  }
+}

@@ -1,0 +1,1 @@
+exports.ReactAdminAuto = require("./lib/AutoAdmin");
