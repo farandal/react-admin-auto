@@ -4,7 +4,7 @@
   "description": "An addition to react-admin that creates automatic list, show, edit and create views",
   "main": "main.js",
   "scripts": {
-    "build": "rm ./lib/* && tsc",
+    "build": "rm -f *.tgz ./lib/* && tsc",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

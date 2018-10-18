@@ -104,3 +104,8 @@ export default class AutoAdmin {
     );
   };
 }
+
+export const AutoList = AutoAdmin.AutoList;
+export const AutoShow = AutoAdmin.AutoShow;
+export const AutoEdit = AutoAdmin.AutoEdit;
+export const AutoCreate = AutoAdmin.AutoCreate;

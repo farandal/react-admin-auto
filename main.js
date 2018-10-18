@@ -1,1 +1,1 @@
-exports.ReactAdminAuto = require("./lib/AutoAdmin");
+exports.ReactAdminAuto = require("./lib/AutoAdmin").AutoAdmin;

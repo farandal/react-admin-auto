@@ -10,4 +10,8 @@ export default class AutoAdmin {
     static AutoEdit: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
     static AutoList: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
 }
+export declare const AutoList: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
+export declare const AutoShow: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
+export declare const AutoEdit: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
+export declare const AutoCreate: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
 export {};
