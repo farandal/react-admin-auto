@@ -1,76 +1,81 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
-import { Admin } from "react-admin";
-import { AutoResource } from "react-admin-auto";
+import { Admin } from 'react-admin';
+import { AutoResource } from 'react-admin-auto';
 
 import fakeDataProvider from 'ra-data-fakerest';
 
+const dataProvider = fakeDataProvider({
+  posts: [
+    { id: 0, author: 10, title: 'Hello, world!', views: 123 },
+    { id: 1, author: 11, title: 'FooBar', views: 56789 },
+    { id: 2, author: 10, title: 'Goodbye, all.', views: 777 }
+  ],
+  users: [
+    {
+      id: 10,
+      name: 'John Doe',
+      description: 'An amazing architect!',
+      social: [{ service: 'twitter', handle: '@amazing', followers: 1234 }]
+    },
+    {
+      id: 11,
+      name: 'Jane Doe',
+      description: 'Enthusiastic Engineer',
+      social: [
+        { service: 'twitter', handle: '@engineer', followers: 5 },
+        { service: 'instagram', handle: '@engineer-forever', followers: 6 }
+      ]
+    }
+  ]
+});
+
 const POST_SCHEMA = [
   {
-    attribute: "title",
+    attribute: 'author',
+    type: 'users.name'
+  },
+  {
+    attribute: 'title',
     type: String
   },
   {
-    attribute: "views",
+    attribute: 'views',
     type: Number
   }
 ];
 const USER_SCHEMA = [
   {
-    attribute: "name",
+    attribute: 'name',
     type: String
   },
   {
-    attribute: "description",
+    attribute: 'description',
     type: String
   },
   {
-    attribute: "social",
+    attribute: 'social',
     type: [
       {
-        attribute: "service",
+        attribute: 'service',
         type: String
       },
       {
-        attribute: "handle",
+        attribute: 'handle',
         type: String
       },
       {
-        attribute: "followers",
+        attribute: 'followers',
         type: Number
       }
     ]
   }
 ];
 
-const PostAdmin = AutoResource("posts", { schema: POST_SCHEMA });
-const UserAdmin = AutoResource("users", {
+const PostAdmin = AutoResource('posts', { schema: POST_SCHEMA });
+const UserAdmin = AutoResource('users', {
   schema: USER_SCHEMA
-});
-
-const dataProvider = fakeDataProvider({
-  posts: [
-    { id: 0, title: "Hello, world!", views: 123 },
-    { id: 1, title: "FooBar", views: 56789 }
-  ],
-  users: [
-    {
-      id: 0,
-      name: "John Doe",
-      description: "An amazing architect!",
-      social: [{ service: "twitter", handle: "@amazing", followers: 1234 }]
-    },
-    {
-      id: 1,
-      name: "Jane Doe",
-      description: "Enthusiastic Engineer",
-      social: [
-        { service: "twitter", handle: "@engineer", followers: 5 },
-        { service: "instagram", handle: "@engineer-forever", followers: 6 }
-      ]
-    }
-  ]
 });
 
 class AdminHome extends React.Component {
@@ -84,4 +89,4 @@ class AdminHome extends React.Component {
   }
 }
 
-ReactDOM.render(<AdminHome />, document.getElementById("root") as HTMLElement);
+ReactDOM.render(<AdminHome />, document.getElementById('root') as HTMLElement);
