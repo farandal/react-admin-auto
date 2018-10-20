@@ -1,17 +1,22 @@
 /// <reference types="react" />
-import { SchemaTypeOpts } from "mongoose";
 interface AutoAdminAttribute {
     attribute: string;
-    type: SchemaTypeOpts<any>;
+    type: NumberConstructor | StringConstructor | AutoAdminAttribute[];
 }
-export default class AutoAdmin {
-    static AutoCreate: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
-    static AutoShow: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
-    static AutoEdit: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
-    static AutoList: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
-}
-export declare const AutoList: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
-export declare const AutoShow: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
-export declare const AutoEdit: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
-export declare const AutoCreate: (props: any, fields: AutoAdminAttribute[]) => JSX.Element;
+export declare const AutoFilter: (props: any) => JSX.Element;
+export declare const AutoCreate: (props: any, { schema }: {
+    schema: AutoAdminAttribute[];
+}) => JSX.Element;
+export declare const AutoShow: (props: any, { schema }: {
+    schema: AutoAdminAttribute[];
+}) => JSX.Element;
+export declare const AutoEdit: (props: any, { schema }: {
+    schema: AutoAdminAttribute[];
+}) => JSX.Element;
+export declare const AutoList: (props: any, { schema }: {
+    schema: AutoAdminAttribute[];
+}) => JSX.Element;
+export declare const AutoResource: (modelName: string, { schema }: {
+    schema: AutoAdminAttribute[];
+}) => JSX.Element;
 export {};

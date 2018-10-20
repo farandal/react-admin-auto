@@ -1,111 +1,165 @@
-import { SchemaTypeOpts } from "mongoose";
+import { linkToRecord } from "ra-core";
 import * as React from "react";
 import {
+  ArrayField,
+  ArrayInput,
   Create,
   Datagrid,
   DisabledInput,
   Edit,
   Filter,
   List,
+  NumberField,
+  NumberInput,
+  Resource,
   Show,
+  ShowButton,
   SimpleForm,
+  SimpleFormIterator,
   SimpleShowLayout,
   TextField,
-  TextInput,
-  ShowButton
+  TextInput
 } from "react-admin";
-import { linkToRecord } from "ra-core";
 
 interface AutoAdminAttribute {
   attribute: string;
-  type: SchemaTypeOpts<any>;
+  type: NumberConstructor | StringConstructor | AutoAdminAttribute[];
 }
 
 const attributeToField = (input: AutoAdminAttribute) => {
+  if (Array.isArray(input.type)) {
+    return (
+      <ArrayField source={input.attribute}>
+        <Datagrid>
+          {input.type.map(attribute => attributeToField(attribute))}
+        </Datagrid>
+      </ArrayField>
+    );
+  }
   switch (input.type) {
     case String:
       return <TextField source={input.attribute} />;
+    case Number:
+      return <NumberField source={input.attribute} />;
   }
   return <TextField source={input.attribute} />;
 };
 
 const attributeToInput = (input: AutoAdminAttribute) => {
+  if (Array.isArray(input.type)) {
+    return (
+      <ArrayInput source={input.attribute}>
+        <SimpleFormIterator>
+          {input.type.map(attribute => attributeToInput(attribute))}
+        </SimpleFormIterator>
+      </ArrayInput>
+    );
+  }
   switch (input.type) {
     case String:
       return <TextInput source={input.attribute} />;
+    case Number:
+      return <NumberInput source={input.attribute} />;
   }
   return <TextInput source={input.attribute} />;
 };
 
-const AutoFilter = (props: any) => (
+export const AutoFilter = (props: any) => (
   <Filter {...props}>
     <TextInput label="Search" source="q" alwaysOn={true} />
   </Filter>
 );
 const AutoTitle = ({
   record,
-  fields
+  schema
 }: {
   record?: any;
-  fields: AutoAdminAttribute[];
+  schema: AutoAdminAttribute[];
 }) => {
-  return <span>Edit {record ? `"${record[fields[0].attribute]}"` : ""}</span>;
+  return <span>Edit {record ? `"${record[schema[0].attribute]}"` : ""}</span>;
 };
 
-export default class AutoAdmin {
-  static AutoCreate = (props: any, fields: AutoAdminAttribute[]) => {
-    return (
-      <Create title="Create a course" {...props}>
-        <SimpleForm>{fields.map(attributeToInput)}</SimpleForm>
-      </Create>
-    );
-  };
+export const AutoCreate = (
+  props: any,
+  { schema }: { schema: AutoAdminAttribute[] }
+) => {
+  return (
+    <Create title="Create a course" {...props}>
+      <SimpleForm>{schema.map(attributeToInput)}</SimpleForm>
+    </Create>
+  );
+};
 
-  static AutoShow = (props: any, fields: AutoAdminAttribute[]) => {
-    return (
-      <Show title={<AutoTitle fields={fields} />} {...props}>
-        <SimpleShowLayout>
-          <TextField source="id" />
-          {fields.map(attributeToField)}
-        </SimpleShowLayout>
-      </Show>
-    );
-  };
+export const AutoShow = (
+  props: any,
+  { schema }: { schema: AutoAdminAttribute[] }
+) => {
+  return (
+    <Show title={<AutoTitle schema={schema} />} {...props}>
+      <SimpleShowLayout>
+        <TextField source="id" />
+        {schema.map(attributeToField)}
+      </SimpleShowLayout>
+    </Show>
+  );
+};
 
-  static AutoEdit = (props: any, fields: AutoAdminAttribute[]) => {
-    return (
-      <Edit title={<AutoTitle fields={fields} />} {...props}>
-        <SimpleForm>
-          <DisabledInput source="id" />
-          {fields.map(attributeToInput)}
-        </SimpleForm>
-      </Edit>
-    );
-  };
+export const AutoEdit = (
+  props: any,
+  { schema }: { schema: AutoAdminAttribute[] }
+) => {
+  return (
+    <Edit title={<AutoTitle schema={schema} />} {...props}>
+      <SimpleForm>
+        <DisabledInput source="id" />
+        {schema.map(attributeToInput)}
+      </SimpleForm>
+    </Edit>
+  );
+};
 
-  static AutoList = (props: any, fields: AutoAdminAttribute[]) => {
-    return (
-      <List {...props} filters={<AutoFilter />}>
-        <Datagrid>
-          <TextField
-            source="id"
-            onClick={() =>
-              (document.location = linkToRecord(
-                props.basePath,
-                props.record.id,
-                "show"
-              ))
-            }
-          />
-          {fields.map(attributeToField)}
-          <ShowButton basePath={props.basePath} />
-        </Datagrid>
-      </List>
-    );
-  };
-}
+export const AutoList = (
+  props: any,
+  { schema }: { schema: AutoAdminAttribute[] }
+) => {
+  return (
+    <List {...props} filters={<AutoFilter />}>
+      <Datagrid>
+        <TextField
+          source="id"
+          onClick={() =>
+            (document.location = linkToRecord(
+              props.basePath,
+              props.record.id,
+              "show"
+            ))
+          }
+        />
+        {schema.map(attributeToField)}
+        <ShowButton basePath={props.basePath} />
+      </Datagrid>
+    </List>
+  );
+};
 
-export const AutoList = AutoAdmin.AutoList;
-export const AutoShow = AutoAdmin.AutoShow;
-export const AutoEdit = AutoAdmin.AutoEdit;
-export const AutoCreate = AutoAdmin.AutoCreate;
+export const AutoResource = (
+  modelName: string,
+  { schema }: { schema: AutoAdminAttribute[] }
+) => {
+  const list = (props: any) => AutoList(props, { schema });
+  const show = (props: any) => AutoShow(props, { schema });
+  const edit = (props: any) => AutoEdit(props, { schema });
+  const create = (props: any) => AutoCreate(props, { schema });
+  const icon = "address-book";
+
+  return (
+    <Resource
+      name={modelName}
+      list={list}
+      show={show}
+      edit={edit}
+      create={create}
+      icon={icon}
+    />
+  );
+};
