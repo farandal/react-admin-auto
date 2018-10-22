@@ -25,7 +25,7 @@ const dataProvider = fakeDataProvider({
       description: 'Enthusiastic Engineer',
       social: [
         { service: 'twitter', handle: '@engineer', followers: 5 },
-        { service: 'instagram', handle: '@engineer-forever', followers: 6 }
+        { service: 'insta', handle: '@engineer-forever', followers: 6 }
       ]
     }
   ]
@@ -45,6 +45,13 @@ const POST_SCHEMA = [
     type: Number
   }
 ];
+
+enum Service {
+  Twitter = 'twitter',
+  Instagram = 'insta',
+  SnapChat = 'snap'
+}
+
 const USER_SCHEMA = [
   {
     attribute: 'name',
@@ -59,7 +66,7 @@ const USER_SCHEMA = [
     type: [
       {
         attribute: 'service',
-        type: String
+        type: Service
       },
       {
         attribute: 'handle',

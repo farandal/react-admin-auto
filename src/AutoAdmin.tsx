@@ -24,9 +24,32 @@ import {
   TextInput
 } from 'react-admin';
 
+function isEnum(instance: any): boolean {
+  let keys = Object.keys(instance);
+  let values: any[] = [];
+
+  for (let key of keys) {
+    let value: any = instance[key] as any;
+
+    if (typeof value === 'number') {
+      value = value.toString();
+    }
+
+    values.push(value);
+  }
+
+  for (let key of keys) {
+    if (values.indexOf(key) < 0) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 interface AutoAdminAttribute {
   attribute: string;
-  type: string | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+  type: string | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
 }
 
 const attributeToField = (input: AutoAdminAttribute) => {
@@ -62,20 +85,33 @@ const attributeToInput = (input: AutoAdminAttribute) => {
       </ArrayInput>
     );
   }
-  if (typeof input.type === 'string') {
-    const [reference, sourceName] = input.type.split('.');
-    return (
-      <ReferenceInput source={input.attribute} reference={reference} sort={{ field: sourceName, order: 'ASC' }}>
-        <SelectInput source={sourceName} />
-      </ReferenceInput>
-    );
+
+  /* Special cases – Passing strings, passing enums */
+  switch (typeof input.type) {
+    case 'string': {
+      /* table.field */
+      const [reference, sourceName] = input.type.split('.');
+      return (
+        <ReferenceInput source={input.attribute} reference={reference} sort={{ field: sourceName, order: 'ASC' }}>
+          <SelectInput source={sourceName} />
+        </ReferenceInput>
+      );
+    }
+    case 'object': {
+      /* {display: internal} */
+      const obj: any = input.type;
+      const choices = Object.keys(input.type).map(key => ({ id: obj[key], name: key }));
+      return <SelectInput source={input.attribute} choices={choices} />;
+    }
   }
+
   switch (input.type) {
     case String:
       return <TextInput source={input.attribute} />;
     case Number:
       return <NumberInput source={input.attribute} />;
   }
+
   return <TextInput source={input.attribute} />;
 };
 

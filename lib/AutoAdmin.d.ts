@@ -1,7 +1,7 @@
 /// <reference types="react" />
 interface AutoAdminAttribute {
     attribute: string;
-    type: string | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+    type: string | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
 }
 export declare const AutoFilter: (props: any) => JSX.Element;
 export declare const AutoCreate: (props: any, { schema }: {
