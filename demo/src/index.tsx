@@ -8,9 +8,9 @@ import fakeDataProvider from 'ra-data-fakerest';
 
 const dataProvider = fakeDataProvider({
   posts: [
-    { id: 0, author: 10, title: 'Hello, world!', views: 123 },
-    { id: 1, author: 11, title: 'FooBar', views: 56789 },
-    { id: 2, author: 10, title: 'Goodbye, all.', views: 777 }
+    { id: 0, author: 10, title: 'Hello, world!', views: 123, tags: ['1', '5', '10'] },
+    { id: 1, author: 11, title: 'FooBar', views: 56789, tags: [] },
+    { id: 2, author: 10, title: 'Goodbye, all.', views: 777, tags: ['5'] }
   ],
   users: [
     {
@@ -31,6 +31,12 @@ const dataProvider = fakeDataProvider({
   ]
 });
 
+enum Tags {
+  Sports = '10',
+  News = '5',
+  Politics = '1'
+}
+
 const POST_SCHEMA = [
   {
     attribute: 'author',
@@ -42,7 +48,12 @@ const POST_SCHEMA = [
   },
   {
     attribute: 'views',
-    type: Number
+    type: Number,
+    readOnly: true
+  },
+  {
+    attribute: 'tags',
+    type: [Tags]
   }
 ];
 
@@ -76,7 +87,8 @@ const USER_SCHEMA = [
         attribute: 'followers',
         type: Number
       }
-    ]
+    ],
+    inList: false
   }
 ];
 

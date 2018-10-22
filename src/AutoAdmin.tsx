@@ -1,3 +1,4 @@
+import Chip from '@material-ui/core/Chip';
 import { linkToRecord } from 'ra-core';
 import * as React from 'react';
 import {
@@ -14,6 +15,7 @@ import {
   ReferenceField,
   ReferenceInput,
   Resource,
+  SelectArrayInput,
   SelectInput,
   Show,
   ShowButton,
@@ -24,36 +26,45 @@ import {
   TextInput
 } from 'react-admin';
 
-function isEnum(instance: any): boolean {
-  let keys = Object.keys(instance);
-  let values: any[] = [];
-
-  for (let key of keys) {
-    let value: any = instance[key] as any;
-
-    if (typeof value === 'number') {
-      value = value.toString();
-    }
-
-    values.push(value);
-  }
-
-  for (let key of keys) {
-    if (values.indexOf(key) < 0) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 interface AutoAdminAttribute {
   attribute: string;
   type: string | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+  inList?: boolean;
+  readOnly?: boolean;
 }
+
+const isEnum = (type: any) => typeof type === 'object' && !(type.attribute && type.type);
+
+const invertMap = (map: any) => {
+  if (!map) {
+    return false;
+  }
+  let invertedMap: any = {};
+  Object.keys(map).forEach(key => (invertedMap[map[key]] = key));
+  return invertedMap;
+};
+
+const ListStringsField = ({ record, source, map }: { record?: any; source: string; map?: any }) => {
+  const invertedMap = invertMap(map);
+  return (
+    <>
+      {record[source].map((item: string) => [
+        <Chip key={item} label={invertedMap && invertedMap[item] ? invertedMap[item] : item} />,
+        <> </>
+      ])}
+    </>
+  );
+};
+ListStringsField.defaultProps = { addLabel: true };
+
+const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[key], name: key }));
 
 const attributeToField = (input: AutoAdminAttribute) => {
   if (Array.isArray(input.type)) {
+    /* Array of enum values – We use a SelectArrayInput */
+    if (input.type.length > 0 && isEnum(input.type[0])) {
+      return <ListStringsField source={input.attribute} map={input.type[0]} />;
+    }
     return (
       <ArrayField source={input.attribute}>
         <Datagrid>{input.type.map(attribute => attributeToField(attribute))}</Datagrid>
@@ -79,6 +90,11 @@ const attributeToField = (input: AutoAdminAttribute) => {
 
 const attributeToInput = (input: AutoAdminAttribute) => {
   if (Array.isArray(input.type)) {
+    /* Array of enum values – We use a SelectArrayInput */
+    if (input.type.length > 0 && isEnum(input.type[0])) {
+      return <SelectArrayInput source={input.attribute} choices={enumToChoices(input.type[0])} />;
+    }
+    /* Recurse */
     return (
       <ArrayInput source={input.attribute}>
         <SimpleFormIterator>{input.type.map(attribute => attributeToInput(attribute))}</SimpleFormIterator>
@@ -87,22 +103,14 @@ const attributeToInput = (input: AutoAdminAttribute) => {
   }
 
   /* Special cases – Passing strings, passing enums */
-  switch (typeof input.type) {
-    case 'string': {
-      /* table.field */
-      const [reference, sourceName] = input.type.split('.');
-      return (
-        <ReferenceInput source={input.attribute} reference={reference} sort={{ field: sourceName, order: 'ASC' }}>
-          <SelectInput source={sourceName} />
-        </ReferenceInput>
-      );
-    }
-    case 'object': {
-      /* {display: internal} */
-      const obj: any = input.type;
-      const choices = Object.keys(input.type).map(key => ({ id: obj[key], name: key }));
-      return <SelectInput source={input.attribute} choices={choices} />;
-    }
+  if (typeof input.type === 'string') {
+    /* table.field */
+    const [reference, sourceName] = input.type.split('.');
+    return (
+      <ReferenceInput source={input.attribute} reference={reference} sort={{ field: sourceName, order: 'ASC' }}>
+        <SelectInput source={sourceName} />
+      </ReferenceInput>
+    );
   }
 
   switch (input.type) {
@@ -111,7 +119,9 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     case Number:
       return <NumberInput source={input.attribute} />;
   }
-
+  if (isEnum(input.type)) {
+    return <SelectInput source={input.attribute} choices={enumToChoices(input.type)} />;
+  }
   return <TextInput source={input.attribute} />;
 };
 
@@ -148,7 +158,9 @@ export const AutoEdit = (props: any, { schema }: { schema: AutoAdminAttribute[] 
     <Edit title={<AutoTitle schema={schema} />} {...props}>
       <SimpleForm>
         <DisabledInput source="id" />
-        {schema.map(attributeToInput)}
+        {schema.map(
+          attribute => (attribute.readOnly !== true ? attributeToInput(attribute) : attributeToField(attribute))
+        )}
       </SimpleForm>
     </Edit>
   );
@@ -162,7 +174,7 @@ export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] 
           source="id"
           onClick={() => (document.location = linkToRecord(props.basePath, props.record.id, 'show'))}
         />
-        {schema.map(attributeToField)}
+        {schema.filter(attribute => attribute.inList !== false).map(attributeToField)}
         <ShowButton basePath={props.basePath} />
       </Datagrid>
     </List>
