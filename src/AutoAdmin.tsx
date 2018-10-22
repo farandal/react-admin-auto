@@ -4,6 +4,7 @@ import * as React from 'react';
 import {
   ArrayField,
   ArrayInput,
+  AutocompleteInput,
   Create,
   Datagrid,
   DisabledInput,
@@ -108,7 +109,7 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     const [reference, sourceName] = input.type.split('.');
     return (
       <ReferenceInput source={input.attribute} reference={reference} sort={{ field: sourceName, order: 'ASC' }}>
-        <SelectInput source={sourceName} />
+        <AutocompleteInput optionText={sourceName} />
       </ReferenceInput>
     );
   }
