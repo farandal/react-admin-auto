@@ -15,6 +15,8 @@ import {
   NumberInput,
   ReferenceField,
   ReferenceInput,
+  ReferenceManyField,
+  ReferenceArrayField,
   Resource,
   SelectArrayInput,
   SelectInput,
@@ -24,12 +26,14 @@ import {
   SimpleFormIterator,
   SimpleShowLayout,
   TextField,
-  TextInput
+  TextInput,
+  SingleFieldList,
+  ChipField
 } from 'react-admin';
 
 interface AutoAdminAttribute {
   attribute: string;
-  type: string | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+  type: string | string[] | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
   inList?: boolean;
   readOnly?: boolean;
 }
@@ -61,16 +65,30 @@ ListStringsField.defaultProps = { addLabel: true };
 const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[key], name: key }));
 
 const attributeToField = (input: AutoAdminAttribute) => {
-  if (Array.isArray(input.type)) {
+  if (Array.isArray(input.type) && input.type.length > 0) {
+    const inputType: string | AutoAdminAttribute = input.type[0];
     /* Array of enum values – We use a SelectArrayInput */
-    if (input.type.length > 0 && isEnum(input.type[0])) {
-      return <ListStringsField source={input.attribute} map={input.type[0]} />;
+    if (isEnum(inputType)) {
+      return <ListStringsField source={input.attribute} map={inputType} />;
     }
-    return (
-      <ArrayField source={input.attribute}>
-        <Datagrid>{input.type.map(attribute => attributeToField(attribute))}</Datagrid>
-      </ArrayField>
-    );
+
+    if (typeof inputType === 'string') {
+      const [reference, sourceName] = inputType.split('.');
+      return (
+        <ReferenceArrayField linkType="show" source={input.attribute} reference={reference}>
+          <SingleFieldList>
+            <ChipField source={sourceName} />
+          </SingleFieldList>
+        </ReferenceArrayField>
+      );
+    } else {
+      const inputTypeArray = input.type as AutoAdminAttribute[];
+      return (
+        <ArrayField source={input.attribute}>
+          <Datagrid>{inputTypeArray.map(attribute => attributeToField(attribute))}</Datagrid>
+        </ArrayField>
+      );
+    }
   }
   if (typeof input.type === 'string') {
     const [reference, sourceName] = input.type.split('.');
@@ -90,17 +108,31 @@ const attributeToField = (input: AutoAdminAttribute) => {
 };
 
 const attributeToInput = (input: AutoAdminAttribute) => {
-  if (Array.isArray(input.type)) {
+  if (Array.isArray(input.type) && input.type.length > 0) {
+    const inputType: string | AutoAdminAttribute = input.type[0];
     /* Array of enum values – We use a SelectArrayInput */
-    if (input.type.length > 0 && isEnum(input.type[0])) {
-      return <SelectArrayInput source={input.attribute} choices={enumToChoices(input.type[0])} />;
+    if (isEnum(inputType)) {
+      return <SelectArrayInput source={input.attribute} choices={enumToChoices(inputType)} />;
     }
     /* Recurse */
-    return (
-      <ArrayInput source={input.attribute}>
-        <SimpleFormIterator>{input.type.map(attribute => attributeToInput(attribute))}</SimpleFormIterator>
-      </ArrayInput>
-    );
+
+    if (typeof inputType === 'string') {
+      const [reference, sourceName] = inputType.split('.');
+      return (
+        <ReferenceManyField reference={reference} source={input.attribute} linkType="show">
+          <SingleFieldList>
+            <ChipField source={sourceName} />
+          </SingleFieldList>
+        </ReferenceManyField>
+      );
+    } else {
+      const inputTypeArray = input.type as AutoAdminAttribute[];
+      return (
+        <ArrayInput source={input.attribute}>
+          <SimpleFormIterator>{inputTypeArray.map(attribute => attributeToInput(attribute))}</SimpleFormIterator>
+        </ArrayInput>
+      );
+    }
   }
 
   /* Special cases – Passing strings, passing enums */

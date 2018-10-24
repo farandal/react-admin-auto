@@ -8,9 +8,9 @@ import fakeDataProvider from 'ra-data-fakerest';
 
 const dataProvider = fakeDataProvider({
   posts: [
-    { id: 0, author: 10, title: 'Hello, world!', views: 123, tags: ['1', '5', '10'] },
+    { id: 0, author: 10, readers: [11], title: 'Hello, world!', views: 123, tags: ['1', '5', '10'] },
     { id: 1, author: 11, title: 'FooBar', views: 56789, tags: [] },
-    { id: 2, author: 10, title: 'Goodbye, all.', views: 777, tags: ['5'] }
+    { id: 2, author: 10, readers: [11, 12], title: 'Goodbye, all.', views: 777, tags: ['5'] }
   ],
   users: [
     {
@@ -27,6 +27,11 @@ const dataProvider = fakeDataProvider({
         { service: 'twitter', handle: '@engineer', followers: 5 },
         { service: 'insta', handle: '@engineer-forever', followers: 6 }
       ]
+    },
+    {
+      id: 12,
+      name: 'July Doe',
+      description: 'Car Crasher'
     }
   ]
 });
@@ -41,6 +46,12 @@ const POST_SCHEMA = [
   {
     attribute: 'author',
     type: 'users.name'
+  },
+  {
+    attribute: 'readers',
+    type: ['users.name'],
+    inList: false,
+    readOnly: true
   },
   {
     attribute: 'title',
