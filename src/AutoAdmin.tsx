@@ -8,6 +8,7 @@ import {
   Create,
   Datagrid,
   DateField,
+  DateInput,
   DisabledInput,
   Edit,
   Filter,
@@ -35,9 +36,10 @@ import {
 interface AutoAdminAttribute {
   attribute: string;
   type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+  label?: string;
   inList?: boolean;
   readOnly?: boolean;
-  showTime?: boolean
+  showTime?: boolean;
 }
 
 const isEnum = (type: any) => typeof type === 'object' && !(type.attribute && type.type);
@@ -51,7 +53,7 @@ const invertMap = (map: any) => {
   return invertedMap;
 };
 
-const ListStringsField = ({ record, source, map }: { record?: any; source: string; map?: any }) => {
+const ListStringsField = ({ record, source, map }: { record?: any; source: string; label: string; map?: any }) => {
   const invertedMap = invertMap(map);
   return (
     <>
@@ -71,13 +73,13 @@ const attributeToField = (input: AutoAdminAttribute) => {
     const inputType: string | AutoAdminAttribute = input.type[0];
     /* Array of enum values – We use a SelectArrayInput */
     if (isEnum(inputType)) {
-      return <ListStringsField source={input.attribute} map={inputType} />;
+      return <ListStringsField label={input.label} source={input.attribute} map={inputType} />;
     }
 
     if (typeof inputType === 'string') {
       const [reference, sourceName] = inputType.split('.');
       return (
-        <ReferenceArrayField linkType="show" source={input.attribute} reference={reference}>
+        <ReferenceArrayField label={input.label} linkType="show" source={input.attribute} reference={reference}>
           <SingleFieldList>
             <ChipField source={sourceName} />
           </SingleFieldList>
@@ -86,7 +88,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
     } else {
       const inputTypeArray = input.type as AutoAdminAttribute[];
       return (
-        <ArrayField source={input.attribute}>
+        <ArrayField label={input.label} source={input.attribute}>
           <Datagrid>{inputTypeArray.map(attribute => attributeToField(attribute))}</Datagrid>
         </ArrayField>
       );
@@ -95,20 +97,20 @@ const attributeToField = (input: AutoAdminAttribute) => {
   if (typeof input.type === 'string') {
     const [reference, sourceName] = input.type.split('.');
     return (
-      <ReferenceField linkType="show" source={input.attribute} reference={reference}>
+      <ReferenceField label={input.label} linkType="show" source={input.attribute} reference={reference}>
         <TextField source={sourceName} />
       </ReferenceField>
     );
   }
   switch (input.type) {
     case String:
-      return <TextField source={input.attribute} />;
+      return <TextField label={input.label} source={input.attribute} />;
     case Number:
-      return <NumberField source={input.attribute} />;
+      return <NumberField label={input.label} source={input.attribute} />;
     case Date:
-      return <DateField showTime={input.showTime} source={input.attribute} />;
+      return <DateField label={input.label} showTime={input.showTime} source={input.attribute} />;
   }
-  return <TextField source={input.attribute} />;
+  return <TextField label={input.label} source={input.attribute} />;
 };
 
 const attributeToInput = (input: AutoAdminAttribute) => {
@@ -116,14 +118,14 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     const inputType: string | AutoAdminAttribute = input.type[0];
     /* Array of enum values – We use a SelectArrayInput */
     if (isEnum(inputType)) {
-      return <SelectArrayInput source={input.attribute} choices={enumToChoices(inputType)} />;
+      return <SelectArrayInput label={input.label} source={input.attribute} choices={enumToChoices(inputType)} />;
     }
     /* Recurse */
 
     if (typeof inputType === 'string') {
       const [reference, sourceName] = inputType.split('.');
       return (
-        <ReferenceManyField reference={reference} source={input.attribute} linkType="show">
+        <ReferenceManyField label={input.label} reference={reference} source={input.attribute} linkType="show">
           <SingleFieldList>
             <ChipField source={sourceName} />
           </SingleFieldList>
@@ -132,7 +134,7 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     } else {
       const inputTypeArray = input.type as AutoAdminAttribute[];
       return (
-        <ArrayInput source={input.attribute}>
+        <ArrayInput label={input.label} source={input.attribute}>
           <SimpleFormIterator>{inputTypeArray.map(attribute => attributeToInput(attribute))}</SimpleFormIterator>
         </ArrayInput>
       );
@@ -144,7 +146,11 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     /* table.field */
     const [reference, sourceName] = input.type.split('.');
     return (
-      <ReferenceInput source={input.attribute} reference={reference} sort={{ field: sourceName, order: 'ASC' }}>
+      <ReferenceInput
+        label={input.label}
+        source={input.attribute}
+        reference={reference}
+        sort={{ field: sourceName, order: 'ASC' }}>
         <AutocompleteInput optionText={sourceName} />
       </ReferenceInput>
     );
@@ -152,14 +158,16 @@ const attributeToInput = (input: AutoAdminAttribute) => {
 
   switch (input.type) {
     case String:
-      return <TextInput source={input.attribute} />;
+      return <TextInput label={input.label} source={input.attribute} />;
     case Number:
-      return <NumberInput source={input.attribute} />;
+      return <NumberInput label={input.label} source={input.attribute} />;
+    case Date:
+      return <DateInput label={input.label} showTime={input.showTime} source={input.attribute} />;
   }
   if (isEnum(input.type)) {
-    return <SelectInput source={input.attribute} choices={enumToChoices(input.type)} />;
+    return <SelectInput label={input.label} source={input.attribute} choices={enumToChoices(input.type)} />;
   }
-  return <TextInput source={input.attribute} />;
+  return <TextInput label={input.label} source={input.attribute} />;
 };
 
 export const AutoFilter = (props: any) => (

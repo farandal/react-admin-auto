@@ -69,7 +69,8 @@ const POST_SCHEMA = [
   {
     attribute: 'date',
     type: Date,
-    showTime: true
+    showTime: true,
+    label: 'Creation'
   },
   {
     attribute: 'author',
@@ -83,7 +84,8 @@ const POST_SCHEMA = [
   },
   {
     attribute: 'title',
-    type: String
+    type: String,
+    label: 'Title of the post'
   },
   {
     attribute: 'views',

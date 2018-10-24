@@ -2,6 +2,7 @@
 interface AutoAdminAttribute {
     attribute: string;
     type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+    label?: string;
     inList?: boolean;
     readOnly?: boolean;
     showTime?: boolean;
