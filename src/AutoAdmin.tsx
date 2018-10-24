@@ -7,6 +7,7 @@ import {
   AutocompleteInput,
   Create,
   Datagrid,
+  DateField,
   DisabledInput,
   Edit,
   Filter,
@@ -33,9 +34,10 @@ import {
 
 interface AutoAdminAttribute {
   attribute: string;
-  type: string | string[] | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+  type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
   inList?: boolean;
   readOnly?: boolean;
+  showTime?: boolean
 }
 
 const isEnum = (type: any) => typeof type === 'object' && !(type.attribute && type.type);
@@ -103,6 +105,8 @@ const attributeToField = (input: AutoAdminAttribute) => {
       return <TextField source={input.attribute} />;
     case Number:
       return <NumberField source={input.attribute} />;
+    case Date:
+      return <DateField showTime={input.showTime} source={input.attribute} />;
   }
   return <TextField source={input.attribute} />;
 };

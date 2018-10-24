@@ -8,9 +8,32 @@ import fakeDataProvider from 'ra-data-fakerest';
 
 const dataProvider = fakeDataProvider({
   posts: [
-    { id: 0, author: 10, readers: [11], title: 'Hello, world!', views: 123, tags: ['1', '5', '10'] },
-    { id: 1, author: 11, title: 'FooBar', views: 56789, tags: [] },
-    { id: 2, author: 10, readers: [11, 12], title: 'Goodbye, all.', views: 777, tags: ['5'] }
+    {
+      id: 0,
+      date: new Date('2018-09-01T12:34:56'),
+      author: 10,
+      readers: [11],
+      title: 'Hello, world!',
+      views: 123,
+      tags: ['1', '5', '10']
+    },
+    {
+      id: 1,
+      date: '2018-09-06T12:34:56',
+      author: 11,
+      title: 'Is this really a title?',
+      views: 56789,
+      tags: []
+    },
+    {
+      id: 2,
+      date: new Date('2018-09-04T12:34:56'),
+      author: 10,
+      readers: [11, 12],
+      title: 'Goodbye, all.',
+      views: 777,
+      tags: ['5']
+    }
   ],
   users: [
     {
@@ -43,6 +66,11 @@ enum Tags {
 }
 
 const POST_SCHEMA = [
+  {
+    attribute: 'date',
+    type: Date,
+    showTime: true
+  },
   {
     attribute: 'author',
     type: 'users.name'

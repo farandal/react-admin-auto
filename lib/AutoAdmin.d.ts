@@ -1,9 +1,10 @@
 /// <reference types="react" />
 interface AutoAdminAttribute {
     attribute: string;
-    type: string | string[] | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+    type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
     inList?: boolean;
     readOnly?: boolean;
+    showTime?: boolean;
 }
 export declare const AutoFilter: (props: any) => JSX.Element;
 export declare const AutoCreate: (props: any, { schema }: {
