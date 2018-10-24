@@ -1,7 +1,7 @@
 /// <reference types="react" />
 interface AutoAdminAttribute {
     attribute: string;
-    type: string | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+    type: string | string[] | Object | NumberConstructor | StringConstructor | AutoAdminAttribute[];
     inList?: boolean;
     readOnly?: boolean;
 }
