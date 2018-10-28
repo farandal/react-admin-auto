@@ -4,6 +4,7 @@ import * as React from 'react';
 import {
   ArrayField,
   ArrayInput,
+  AutocompleteArrayInput,
   AutocompleteInput,
   Create,
   Datagrid,
@@ -17,7 +18,7 @@ import {
   NumberInput,
   ReferenceField,
   ReferenceInput,
-  ReferenceManyField,
+  ReferenceArrayInput,
   ReferenceArrayField,
   Resource,
   SelectArrayInput,
@@ -125,11 +126,9 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     if (typeof inputType === 'string') {
       const [reference, sourceName] = inputType.split('.');
       return (
-        <ReferenceManyField label={input.label} reference={reference} source={input.attribute} linkType="show">
-          <SingleFieldList>
-            <ChipField source={sourceName} />
-          </SingleFieldList>
-        </ReferenceManyField>
+        <ReferenceArrayInput label={input.label} reference={reference} source={input.attribute}>
+          <AutocompleteArrayInput optionText={sourceName}/>
+        </ReferenceArrayInput>
       );
     } else {
       const inputTypeArray = input.type as AutoAdminAttribute[];

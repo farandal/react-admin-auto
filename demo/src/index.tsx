@@ -7,6 +7,7 @@ import { AutoResource } from 'react-admin-auto';
 import fakeDataProvider from 'ra-data-fakerest';
 
 const dataProvider = fakeDataProvider({
+  tags: [{ id: '1', name: 'Tag One' }, { id: '5', name: 'Tag Five' }, { id: '10', name: 'Tag Ten' }],
   posts: [
     {
       id: 0,
@@ -59,11 +60,12 @@ const dataProvider = fakeDataProvider({
   ]
 });
 
-enum Tags {
-  Sports = '10',
-  News = '5',
-  Politics = '1'
-}
+const TAG_SCHEMA = [
+  {
+    attribute: 'name',
+    type: String
+  }
+];
 
 const POST_SCHEMA = [
   {
@@ -94,7 +96,7 @@ const POST_SCHEMA = [
   },
   {
     attribute: 'tags',
-    type: [Tags]
+    type: ['tags.name']
   }
 ];
 
@@ -133,6 +135,7 @@ const USER_SCHEMA = [
   }
 ];
 
+const TagAdmin = AutoResource('tags', { schema: TAG_SCHEMA });
 const PostAdmin = AutoResource('posts', { schema: POST_SCHEMA });
 const UserAdmin = AutoResource('users', {
   schema: USER_SCHEMA
@@ -142,6 +145,7 @@ class AdminHome extends React.Component {
   render() {
     return (
       <Admin dataProvider={dataProvider}>
+        {TagAdmin}
         {PostAdmin}
         {UserAdmin}
       </Admin>
