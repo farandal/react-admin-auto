@@ -6,6 +6,8 @@ import {
   ArrayInput,
   AutocompleteArrayInput,
   AutocompleteInput,
+  BooleanField,
+  BooleanInput,
   Create,
   Datagrid,
   DateField,
@@ -108,6 +110,8 @@ const attributeToField = (input: AutoAdminAttribute) => {
       return <TextField label={input.label} source={input.attribute} />;
     case Number:
       return <NumberField label={input.label} source={input.attribute} />;
+    case Boolean:
+      return <BooleanField label={input.label} source={input.attribute} />;
     case Date:
       return <DateField label={input.label} showTime={input.showTime} source={input.attribute} />;
   }
@@ -127,7 +131,7 @@ const attributeToInput = (input: AutoAdminAttribute) => {
       const [reference, sourceName] = inputType.split('.');
       return (
         <ReferenceArrayInput label={input.label} reference={reference} source={input.attribute}>
-          <AutocompleteArrayInput optionText={sourceName}/>
+          <AutocompleteArrayInput optionText={sourceName} />
         </ReferenceArrayInput>
       );
     } else {
@@ -160,6 +164,8 @@ const attributeToInput = (input: AutoAdminAttribute) => {
       return <TextInput label={input.label} source={input.attribute} />;
     case Number:
       return <NumberInput label={input.label} source={input.attribute} />;
+    case Boolean:
+      return <BooleanInput label={input.label} source={input.attribute} />;
     case Date:
       return <DateInput label={input.label} showTime={input.showTime} source={input.attribute} />;
   }
