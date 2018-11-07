@@ -129,9 +129,10 @@ const attributeToInput = (input: AutoAdminAttribute) => {
 
     if (typeof inputType === 'string') {
       const [reference, sourceName] = inputType.split('.');
+      const safeIfNull = (choice: any) => (choice ? choice[sourceName] : '?') || '??';
       return (
         <ReferenceArrayInput label={input.label} reference={reference} source={input.attribute}>
-          <AutocompleteArrayInput optionText={sourceName} />
+          <AutocompleteArrayInput optionText={safeIfNull} />
         </ReferenceArrayInput>
       );
     } else {
