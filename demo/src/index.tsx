@@ -41,12 +41,18 @@ const dataProvider = fakeDataProvider({
       id: 10,
       name: 'John Doe',
       description: 'An amazing architect!',
+      address: '54 Somewhere St\nNew York, NY 10001',
+      phone: '(650) 987 6543',
+      email: 'john@doe.com',
       social: [{ service: 'twitter', handle: '@amazing', followers: 1234 }]
     },
     {
       id: 11,
       name: 'Jane Doe',
       description: 'Enthusiastic Engineer',
+      address: '101 Elsewhere St\nNew York, NY 10001',
+      phone: '(650) 675 4898',
+      email: 'Jane@doe.com',
       social: [
         { service: 'twitter', handle: '@engineer', followers: 5 },
         { service: 'insta', handle: '@engineer-forever', followers: 6 }
@@ -55,7 +61,10 @@ const dataProvider = fakeDataProvider({
     {
       id: 12,
       name: 'July Doe',
-      description: 'Car Crasher'
+      description: 'Car Crasher',
+      address: '54 Somewhere St\nNew York, NY 10001',
+      phone: '(650) 453 6161',
+      email: 'july@doe.com',
     }
   ]
 });
@@ -114,6 +123,24 @@ const USER_SCHEMA = [
   {
     attribute: 'description',
     type: String
+  },
+  {
+    attribute: 'address',
+    type: String,
+    tab: 'Contact Information',
+    inList: false,
+  },
+  {
+    attribute: 'phone',
+    type: String,
+    tab: 'Contact Information',
+    inList: false,
+  },
+  {
+    attribute: 'email',
+    type: String,
+    tab: 'Contact Information',
+    inList: false,
   },
   {
     attribute: 'social',

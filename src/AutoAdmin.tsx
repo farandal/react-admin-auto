@@ -12,7 +12,6 @@ import {
   Datagrid,
   DateField,
   DateInput,
-  DisabledInput,
   Edit,
   Filter,
   List,
@@ -27,9 +26,11 @@ import {
   SelectInput,
   Show,
   ShowButton,
-  SimpleForm,
+  TabbedShowLayout,
+  Tab,
   SimpleFormIterator,
-  SimpleShowLayout,
+  TabbedForm,
+  FormTab,
   TextField,
   TextInput,
   SingleFieldList,
@@ -39,6 +40,7 @@ import {
 interface AutoAdminAttribute {
   attribute: string;
   type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+  tab?: string;
   label?: string;
   inList?: boolean;
   readOnly?: boolean;
@@ -82,7 +84,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
     if (typeof inputType === 'string') {
       const [reference, sourceName] = inputType.split('.');
       return (
-        <ReferenceArrayField label={input.label} linkType="show" source={input.attribute} reference={reference}>
+        <ReferenceArrayField label={input.label} linkType='show' source={input.attribute} reference={reference}>
           <SingleFieldList>
             <ChipField source={sourceName} />
           </SingleFieldList>
@@ -100,7 +102,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
   if (typeof input.type === 'string') {
     const [reference, sourceName] = input.type.split('.');
     return (
-      <ReferenceField label={input.label} linkType="show" source={input.attribute} reference={reference}>
+      <ReferenceField label={input.label} linkType='show' source={input.attribute} reference={reference}>
         <TextField source={sourceName} />
       </ReferenceField>
     );
@@ -119,6 +121,9 @@ const attributeToField = (input: AutoAdminAttribute) => {
 };
 
 const attributeToInput = (input: AutoAdminAttribute) => {
+  if (input.readOnly) {
+    return attributeToField(input);
+  }
   if (Array.isArray(input.type) && input.type.length > 0) {
     const inputType: string | AutoAdminAttribute = input.type[0];
     /* Array of enum values – We use a SelectArrayInput */
@@ -176,9 +181,51 @@ const attributeToInput = (input: AutoAdminAttribute) => {
   return <TextInput label={input.label} source={input.attribute} />;
 };
 
+const groupByTabs = (schema: AutoAdminAttribute[]): AutoAdminAttribute[][] => {
+  const tabs: AutoAdminAttribute[][] = [];
+  schema.forEach(attribute => {
+    let added = false;
+    tabs.forEach(tab => {
+      const name = tab[0].tab;
+      if (name === attribute.tab) {
+        tab.push(attribute);
+        added = true;
+      }
+    });
+    if (!added) {
+      tabs.push([attribute]);
+    }
+  });
+  return tabs;
+};
+
+const tabbedForm = (schema: AutoAdminAttribute[]) => {
+  return (
+    <TabbedForm>
+      {groupByTabs(schema).map(groupOfAttributes => (
+        <FormTab label={groupOfAttributes[0].tab || 'Main'}>
+          {groupOfAttributes.map(attribute =>
+            attribute.readOnly !== true ? attributeToInput(attribute) : attributeToField(attribute)
+          )}
+        </FormTab>
+      ))}
+    </TabbedForm>
+  );
+};
+
+const tabbedLayout = (schema: AutoAdminAttribute[]) => {
+  return (
+    <TabbedShowLayout>
+      {groupByTabs(schema).map(groupOfAttributes => (
+        <Tab label={groupOfAttributes[0].tab || 'Main'}>{groupOfAttributes.map(attributeToField)}</Tab>
+      ))}
+    </TabbedShowLayout>
+  );
+};
+
 export const AutoFilter = (props: any) => (
   <Filter {...props}>
-    <TextInput label="Search" source="q" alwaysOn={true} />
+    <TextInput label='Search' source='q' alwaysOn={true} />
   </Filter>
 );
 const AutoTitle = ({ record, schema }: { record?: any; schema: AutoAdminAttribute[] }) => {
@@ -187,8 +234,8 @@ const AutoTitle = ({ record, schema }: { record?: any; schema: AutoAdminAttribut
 
 export const AutoCreate = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
   return (
-    <Create title="Create a course" {...props}>
-      <SimpleForm>{schema.map(attributeToInput)}</SimpleForm>
+    <Create title='Create a course' {...props}>
+      {tabbedForm(schema)}
     </Create>
   );
 };
@@ -196,10 +243,7 @@ export const AutoCreate = (props: any, { schema }: { schema: AutoAdminAttribute[
 export const AutoShow = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
   return (
     <Show title={<AutoTitle schema={schema} />} {...props}>
-      <SimpleShowLayout>
-        <TextField source="id" />
-        {schema.map(attributeToField)}
-      </SimpleShowLayout>
+      {tabbedLayout(schema)}
     </Show>
   );
 };
@@ -207,12 +251,7 @@ export const AutoShow = (props: any, { schema }: { schema: AutoAdminAttribute[] 
 export const AutoEdit = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
   return (
     <Edit title={<AutoTitle schema={schema} />} {...props}>
-      <SimpleForm>
-        <DisabledInput source="id" />
-        {schema.map(
-          attribute => (attribute.readOnly !== true ? attributeToInput(attribute) : attributeToField(attribute))
-        )}
-      </SimpleForm>
+      {tabbedForm(schema)}
     </Edit>
   );
 };
@@ -222,7 +261,7 @@ export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] 
     <List {...props} filters={<AutoFilter />}>
       <Datagrid>
         <TextField
-          source="id"
+          source='id'
           onClick={() => (document.location = linkToRecord(props.basePath, props.record.id, 'show'))}
         />
         {schema.filter(attribute => attribute.inList !== false).map(attributeToField)}
