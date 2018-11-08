@@ -99,6 +99,11 @@ const POST_SCHEMA = [
     label: 'Title of the post'
   },
   {
+    attribute: 'post',
+    type: String,
+    richText: true
+  },
+  {
     attribute: 'views',
     type: Number,
     readOnly: true

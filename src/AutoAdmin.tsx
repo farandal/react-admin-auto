@@ -8,33 +8,33 @@ import {
   AutocompleteInput,
   BooleanField,
   BooleanInput,
+  ChipField,
   Create,
   Datagrid,
   DateField,
   DateInput,
   Edit,
   Filter,
+  FormTab,
   List,
   NumberField,
   NumberInput,
+  ReferenceArrayField,
+  ReferenceArrayInput,
   ReferenceField,
   ReferenceInput,
-  ReferenceArrayInput,
-  ReferenceArrayField,
   Resource,
   SelectArrayInput,
   SelectInput,
   Show,
   ShowButton,
-  TabbedShowLayout,
-  Tab,
   SimpleFormIterator,
-  TabbedForm,
-  FormTab,
-  TextField,
-  TextInput,
   SingleFieldList,
-  ChipField
+  Tab,
+  TabbedForm,
+  TabbedShowLayout,
+  TextField,
+  TextInput
 } from 'react-admin';
 
 interface AutoAdminAttribute {
@@ -113,7 +113,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
     case Boolean:
       return <BooleanField label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Date:
-        <DateField label={input.label} source={input.attribute} options={input.fieldOptions} />
+      return <DateField label={input.label} source={input.attribute} options={input.fieldOptions} />;
   }
   return <TextField label={input.label} source={input.attribute} options={input.fieldOptions} />;
 };
