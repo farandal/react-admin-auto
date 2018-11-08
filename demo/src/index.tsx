@@ -13,6 +13,7 @@ const dataProvider = fakeDataProvider({
       id: 0,
       date: new Date('2018-09-01T12:34:56'),
       author: 10,
+      revenue: 100.1,
       readers: [11],
       title: 'Hello, world!',
       post: '7, 8, 9',
@@ -23,6 +24,7 @@ const dataProvider = fakeDataProvider({
       id: 1,
       date: '2018-09-06T12:34:56',
       author: 11,
+      revenue: 200.2,
       title: 'Is this really a title?',
       post: '4, 5, 6',
       views: 56789,
@@ -32,6 +34,7 @@ const dataProvider = fakeDataProvider({
       id: 2,
       date: new Date('2018-09-04T12:34:56'),
       author: 10,
+      revenue: 300.3,
       readers: [11, 12],
       title: 'Goodbye, all.',
       post: '1, 2, 3',
@@ -103,8 +106,7 @@ const POST_SCHEMA = [
   },
   {
     attribute: 'post',
-    type: String,
-    richText: true
+    type: String
   },
   {
     attribute: 'views',
@@ -114,6 +116,12 @@ const POST_SCHEMA = [
   {
     attribute: 'tags',
     type: ['tags.name']
+  },
+  {
+    attribute: 'revenue',
+    type: Number,
+    readOnly: true,
+    fieldOptions: { style: 'currency', currency: 'USD' }
   }
 ];
 

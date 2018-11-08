@@ -44,7 +44,6 @@ interface AutoAdminAttribute {
   label?: string;
   inList?: boolean;
   readOnly?: boolean;
-  richText?: boolean;
   fieldOptions?: any;
 }
 
@@ -166,16 +165,23 @@ const attributeToInput = (input: AutoAdminAttribute) => {
 
   switch (input.type) {
     case Number:
-      return <NumberInput label={input.label} source={input.attribute} />;
+      return <NumberInput label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Boolean:
-      return <BooleanInput label={input.label} source={input.attribute} />;
+      return <BooleanInput label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Date:
-      return <DateInput label={input.label} source={input.attribute} />;
+      return <DateInput label={input.label} source={input.attribute} options={input.fieldOptions} />;
   }
   if (isEnum(input.type)) {
-    return <SelectInput label={input.label} source={input.attribute} choices={enumToChoices(input.type)} />;
+    return (
+      <SelectInput
+        label={input.label}
+        source={input.attribute}
+        choices={enumToChoices(input.type)}
+        options={input.fieldOptions}
+      />
+    );
   }
-  return <TextInput label={input.label} source={input.attribute} />;
+  return <TextInput label={input.label} source={input.attribute} options={input.fieldOptions} />;
 };
 
 const groupByTabs = (schema: AutoAdminAttribute[]): AutoAdminAttribute[][] => {

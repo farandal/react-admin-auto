@@ -6,7 +6,6 @@ interface AutoAdminAttribute {
     label?: string;
     inList?: boolean;
     readOnly?: boolean;
-    richText?: boolean;
     fieldOptions?: any;
 }
 export declare const AutoFilter: (props: any) => JSX.Element;
