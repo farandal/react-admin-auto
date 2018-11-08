@@ -120,9 +120,9 @@ const attributeToField = (input: AutoAdminAttribute) => {
       return <DateField label={input.label} showTime={input.showTime} source={input.attribute} />;
   }
   return input.richText ? (
-    <RichTextField label={input.label} source={input.attribute} options={input.fieldOptions} />
+    <RichTextField label={input.label} source={input.attribute} />
   ) : (
-    <TextField label={input.label} source={input.attribute} options={input.fieldOptions} />
+    <TextField label={input.label} source={input.attribute} />
   );
 };
 
