@@ -6,7 +6,7 @@ interface AutoAdminAttribute {
     label?: string;
     inList?: boolean;
     readOnly?: boolean;
-    showTime?: boolean;
+    fieldOptions?: any;
 }
 export declare const AutoFilter: (props: any) => JSX.Element;
 export declare const AutoCreate: (props: any, { schema }: {

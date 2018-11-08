@@ -44,7 +44,7 @@ interface AutoAdminAttribute {
   label?: string;
   inList?: boolean;
   readOnly?: boolean;
-  showTime?: boolean;
+  fieldOptions?: any;
 }
 
 const isEnum = (type: any) => typeof type === 'object' && !(type.attribute && type.type);
@@ -111,13 +111,13 @@ const attributeToField = (input: AutoAdminAttribute) => {
     case String:
       return <TextField label={input.label} source={input.attribute} />;
     case Number:
-      return <NumberField label={input.label} source={input.attribute} />;
+      return <NumberField label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Boolean:
-      return <BooleanField label={input.label} source={input.attribute} />;
+      return <BooleanField label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Date:
-      return <DateField label={input.label} showTime={input.showTime} source={input.attribute} />;
+        <DateField label={input.label} source={input.attribute} options={input.fieldOptions} />
   }
-  return <TextField label={input.label} source={input.attribute} />;
+  return <TextField label={input.label} source={input.attribute} options={input.fieldOptions} />;
 };
 
 const attributeToInput = (input: AutoAdminAttribute) => {
@@ -173,7 +173,7 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     case Boolean:
       return <BooleanInput label={input.label} source={input.attribute} />;
     case Date:
-      return <DateInput label={input.label} showTime={input.showTime} source={input.attribute} />;
+      return <DateInput label={input.label} source={input.attribute} />;
   }
   if (isEnum(input.type)) {
     return <SelectInput label={input.label} source={input.attribute} choices={enumToChoices(input.type)} />;
