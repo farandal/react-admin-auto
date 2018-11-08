@@ -8,33 +8,36 @@ import {
   AutocompleteInput,
   BooleanField,
   BooleanInput,
+  ChipField,
   Create,
   Datagrid,
   DateField,
+  DateTimeInput,
   DateInput,
   Edit,
   Filter,
+  FormTab,
   List,
   NumberField,
   NumberInput,
+  ReferenceArrayField,
+  ReferenceArrayInput,
   ReferenceField,
   ReferenceInput,
-  ReferenceArrayInput,
-  ReferenceArrayField,
   Resource,
+  RichTextField,
+  RichTextInput,
   SelectArrayInput,
   SelectInput,
   Show,
   ShowButton,
-  TabbedShowLayout,
-  Tab,
   SimpleFormIterator,
-  TabbedForm,
-  FormTab,
-  TextField,
-  TextInput,
   SingleFieldList,
-  ChipField
+  Tab,
+  TabbedForm,
+  TabbedShowLayout,
+  TextField,
+  TextInput
 } from 'react-admin';
 
 interface AutoAdminAttribute {
@@ -45,6 +48,7 @@ interface AutoAdminAttribute {
   inList?: boolean;
   readOnly?: boolean;
   showTime?: boolean;
+  richText?: boolean;
 }
 
 const isEnum = (type: any) => typeof type === 'object' && !(type.attribute && type.type);
@@ -108,8 +112,6 @@ const attributeToField = (input: AutoAdminAttribute) => {
     );
   }
   switch (input.type) {
-    case String:
-      return <TextField label={input.label} source={input.attribute} />;
     case Number:
       return <NumberField label={input.label} source={input.attribute} />;
     case Boolean:
@@ -117,7 +119,11 @@ const attributeToField = (input: AutoAdminAttribute) => {
     case Date:
       return <DateField label={input.label} showTime={input.showTime} source={input.attribute} />;
   }
-  return <TextField label={input.label} source={input.attribute} />;
+  return input.richText ? (
+    <RichTextField label={input.label} source={input.attribute} options={input.fieldOptions} />
+  ) : (
+    <TextField label={input.label} source={input.attribute} options={input.fieldOptions} />
+  );
 };
 
 const attributeToInput = (input: AutoAdminAttribute) => {
@@ -166,8 +172,6 @@ const attributeToInput = (input: AutoAdminAttribute) => {
   }
 
   switch (input.type) {
-    case String:
-      return <TextInput label={input.label} source={input.attribute} />;
     case Number:
       return <NumberInput label={input.label} source={input.attribute} />;
     case Boolean:
@@ -178,7 +182,11 @@ const attributeToInput = (input: AutoAdminAttribute) => {
   if (isEnum(input.type)) {
     return <SelectInput label={input.label} source={input.attribute} choices={enumToChoices(input.type)} />;
   }
-  return <TextInput label={input.label} source={input.attribute} />;
+  return input.richText ? (
+    <RichTextInput label={input.label} source={input.attribute} />
+  ) : (
+    <TextInput label={input.label} source={input.attribute} />
+  );
 };
 
 const groupByTabs = (schema: AutoAdminAttribute[]): AutoAdminAttribute[][] => {
