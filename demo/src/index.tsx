@@ -15,6 +15,7 @@ const dataProvider = fakeDataProvider({
       author: 10,
       readers: [11],
       title: 'Hello, world!',
+      post: '7, 8, 9',
       views: 123,
       tags: ['1', '5', '10']
     },
@@ -23,6 +24,7 @@ const dataProvider = fakeDataProvider({
       date: '2018-09-06T12:34:56',
       author: 11,
       title: 'Is this really a title?',
+      post: '4, 5, 6',
       views: 56789,
       tags: []
     },
@@ -32,6 +34,7 @@ const dataProvider = fakeDataProvider({
       author: 10,
       readers: [11, 12],
       title: 'Goodbye, all.',
+      post: '1, 2, 3',
       views: 777,
       tags: ['5']
     }
@@ -64,7 +67,7 @@ const dataProvider = fakeDataProvider({
       description: 'Car Crasher',
       address: '54 Somewhere St\nNew York, NY 10001',
       phone: '(650) 453 6161',
-      email: 'july@doe.com',
+      email: 'july@doe.com'
     }
   ]
 });
@@ -133,19 +136,19 @@ const USER_SCHEMA = [
     attribute: 'address',
     type: String,
     tab: 'Contact Information',
-    inList: false,
+    inList: false
   },
   {
     attribute: 'phone',
     type: String,
     tab: 'Contact Information',
-    inList: false,
+    inList: false
   },
   {
     attribute: 'email',
     type: String,
     tab: 'Contact Information',
-    inList: false,
+    inList: false
   },
   {
     attribute: 'social',

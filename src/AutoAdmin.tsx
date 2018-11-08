@@ -44,6 +44,7 @@ interface AutoAdminAttribute {
   label?: string;
   inList?: boolean;
   readOnly?: boolean;
+  richText?: boolean;
   fieldOptions?: any;
 }
 
