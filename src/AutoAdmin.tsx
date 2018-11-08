@@ -108,8 +108,6 @@ const attributeToField = (input: AutoAdminAttribute) => {
     );
   }
   switch (input.type) {
-    case String:
-      return <TextField label={input.label} source={input.attribute} />;
     case Number:
       return <NumberField label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Boolean:
@@ -166,8 +164,6 @@ const attributeToInput = (input: AutoAdminAttribute) => {
   }
 
   switch (input.type) {
-    case String:
-      return <TextInput label={input.label} source={input.attribute} />;
     case Number:
       return <NumberInput label={input.label} source={input.attribute} />;
     case Boolean:
