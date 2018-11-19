@@ -17,6 +17,8 @@ import {
   Filter,
   FormTab,
   List,
+  LongTextField,
+  LongTextInput,
   NumberField,
   NumberInput,
   ReferenceArrayField,
@@ -43,6 +45,7 @@ interface AutoAdminAttribute {
   tab?: string;
   label?: string;
   inList?: boolean;
+  extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
 }
@@ -102,7 +105,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
   if (typeof input.type === 'string') {
     const [reference, sourceName] = input.type.split('.');
     return (
-      <ReferenceField label={input.label} linkType='show' source={input.attribute} reference={reference}>
+      <ReferenceField allowEmpty label={input.label} linkType='show' source={input.attribute} reference={reference}>
         <TextField source={sourceName} />
       </ReferenceField>
     );
@@ -115,11 +118,14 @@ const attributeToField = (input: AutoAdminAttribute) => {
     case Date:
       return <DateField label={input.label} source={input.attribute} options={input.fieldOptions} />;
   }
+  if (input.extended) {
+    return <LongTextField label={input.label} source={input.attribute} options={input.fieldOptions} />;
+  }
   return <TextField label={input.label} source={input.attribute} options={input.fieldOptions} />;
 };
 
 const attributeToInput = (input: AutoAdminAttribute) => {
-  if (input.readOnly) {
+  if (input.readOnly === true) {
     return attributeToField(input);
   }
   if (Array.isArray(input.type) && input.type.length > 0) {
@@ -134,7 +140,7 @@ const attributeToInput = (input: AutoAdminAttribute) => {
       const [reference, sourceName] = inputType.split('.');
       const safeIfNull = (choice: any) => (choice ? choice[sourceName] : '?') || '??';
       return (
-        <ReferenceArrayInput label={input.label} reference={reference} source={input.attribute}>
+        <ReferenceArrayInput allowEmpty label={input.label} reference={reference} source={input.attribute}>
           <AutocompleteArrayInput optionText={safeIfNull} />
         </ReferenceArrayInput>
       );
@@ -154,6 +160,7 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     const [reference, sourceName] = input.type.split('.');
     return (
       <ReferenceInput
+        allowEmpty
         label={input.label}
         source={input.attribute}
         reference={reference}
@@ -181,6 +188,9 @@ const attributeToInput = (input: AutoAdminAttribute) => {
       />
     );
   }
+  if (input.extended) {
+    return <LongTextInput label={input.label} source={input.attribute} options={input.fieldOptions} />;
+  }
   return <TextInput label={input.label} source={input.attribute} options={input.fieldOptions} />;
 };
 
@@ -207,9 +217,7 @@ const tabbedForm = (schema: AutoAdminAttribute[]) => {
     <TabbedForm>
       {groupByTabs(schema).map(groupOfAttributes => (
         <FormTab label={groupOfAttributes[0].tab || 'Main'}>
-          {groupOfAttributes.map(attribute =>
-            attribute.readOnly !== true ? attributeToInput(attribute) : attributeToField(attribute)
-          )}
+          {groupOfAttributes.map(attribute => attributeToInput(attribute))}
         </FormTab>
       ))}
     </TabbedForm>

@@ -5,6 +5,7 @@ interface AutoAdminAttribute {
     tab?: string;
     label?: string;
     inList?: boolean;
+    extended?: boolean;
     readOnly?: boolean;
     fieldOptions?: any;
 }

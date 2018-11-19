@@ -14,7 +14,7 @@ const dataProvider = fakeDataProvider({
       date: new Date('2018-09-01T12:34:56'),
       author: 10,
       revenue: 100.1,
-      readers: [11],
+      readers: [{ reader: 11, since: new Date('2018-09-01T12:34:56') }],
       title: 'Hello, world!',
       post: '7, 8, 9',
       views: 123,
@@ -35,7 +35,10 @@ const dataProvider = fakeDataProvider({
       date: new Date('2018-09-04T12:34:56'),
       author: 10,
       revenue: 300.3,
-      readers: [11, 12],
+      readers: [
+        { reader: 11, since: new Date('2018-09-01T12:34:56') },
+        { reader: 12, since: new Date('2018-09-01T12:34:56') }
+      ],
       title: 'Goodbye, all.',
       post: '1, 2, 3',
       views: 777,
@@ -95,9 +98,17 @@ const POST_SCHEMA = [
   },
   {
     attribute: 'readers',
-    type: ['users.name'],
-    inList: false,
-    readOnly: true
+    type: [
+      {
+        attribute: 'reader',
+        type: 'users.name'
+      },
+      {
+        attribute: 'since',
+        type: Date,
+      }
+    ],
+    inList: false
   },
   {
     attribute: 'title',
