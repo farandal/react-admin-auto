@@ -17,7 +17,6 @@ import {
   Filter,
   FormTab,
   List,
-  LongTextField,
   LongTextInput,
   NumberField,
   NumberInput,
@@ -117,9 +116,6 @@ const attributeToField = (input: AutoAdminAttribute) => {
       return <BooleanField label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Date:
       return <DateField label={input.label} source={input.attribute} options={input.fieldOptions} />;
-  }
-  if (input.extended) {
-    return <LongTextField label={input.label} source={input.attribute} options={input.fieldOptions} />;
   }
   return <TextField label={input.label} source={input.attribute} options={input.fieldOptions} />;
 };
