@@ -7,7 +7,11 @@ import { AutoResource } from 'react-admin-auto';
 import fakeDataProvider from 'ra-data-fakerest';
 
 const dataProvider = fakeDataProvider({
-  tags: [{ id: '1', name: 'Tag One' }, { id: '5', name: 'Tag Five' }, { id: '10', name: 'Tag Ten' }],
+  tags: [
+    { id: '1', name: 'Tag 1', display: 'ONE' },
+    { id: '5', name: 'Tag 5', display: 'FIVE' },
+    { id: '10', name: 'Tag 10', display: 'TEN' }
+  ],
   posts: [
     {
       id: 0,
@@ -78,9 +82,15 @@ const dataProvider = fakeDataProvider({
   ]
 });
 
+/* Schema config for admin display */
+
 const TAG_SCHEMA = [
   {
     attribute: 'name',
+    type: String
+  }, 
+  {
+    attribute: 'display',
     type: String
   }
 ];
@@ -105,7 +115,7 @@ const POST_SCHEMA = [
       },
       {
         attribute: 'since',
-        type: Date,
+        type: Date
       }
     ],
     inList: false
@@ -126,7 +136,7 @@ const POST_SCHEMA = [
   },
   {
     attribute: 'tags',
-    type: ['tags.name']
+    type: ['tags.display']
   },
   {
     attribute: 'revenue',
