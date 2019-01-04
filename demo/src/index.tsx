@@ -88,7 +88,7 @@ const TAG_SCHEMA = [
   {
     attribute: 'name',
     type: String
-  }, 
+  },
   {
     attribute: 'display',
     type: String
@@ -99,7 +99,7 @@ const POST_SCHEMA = [
   {
     attribute: 'date',
     type: Date,
-    showTime: true,
+    fieldOptions: { showTime: true },
     label: 'Creation'
   },
   {

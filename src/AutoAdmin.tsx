@@ -115,7 +115,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
     case Boolean:
       return <BooleanField label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Date:
-      return <DateField label={input.label} source={input.attribute} options={input.fieldOptions} />;
+      return <DateField label={input.label} showTime={input.fieldOptions && input.fieldOptions.showTime} source={input.attribute} options={input.fieldOptions} />;
   }
   return <TextField label={input.label} source={input.attribute} options={input.fieldOptions} />;
 };
