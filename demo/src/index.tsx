@@ -15,6 +15,7 @@ const dataProvider = fakeDataProvider({
   posts: [
     {
       id: 0,
+      published: true,
       date: new Date('2018-09-01T12:34:56'),
       author: 10,
       revenue: 100.1,
@@ -26,6 +27,7 @@ const dataProvider = fakeDataProvider({
     },
     {
       id: 1,
+      published: false,
       date: '2018-09-06T12:34:56',
       author: 11,
       revenue: 200.2,
@@ -52,6 +54,7 @@ const dataProvider = fakeDataProvider({
   users: [
     {
       id: 10,
+      published: true,
       name: 'John Doe',
       description: 'An amazing architect!',
       address: '54 Somewhere St\nNew York, NY 10001',
@@ -101,6 +104,10 @@ const POST_SCHEMA = [
     type: Date,
     fieldOptions: { showTime: true },
     label: 'Creation'
+  },
+  {
+    attribute: 'published',
+    type: Boolean
   },
   {
     attribute: 'author',
