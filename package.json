@@ -1,6 +1,6 @@
 {
   "name": "react-admin-auto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An addition to react-admin that creates automatic list, show, edit and create views",
   "main": "main.js",
   "scripts": {
@@ -23,8 +23,8 @@
     "typescript": "^3.1.3"
   },
   "dependencies": {
-    "react-admin": "^2.4.0",
     "react": "^16.5.2",
+    "react-admin": "^2.4.0",
     "react-dom": "^16.5.2"
   },
   "prettier": {

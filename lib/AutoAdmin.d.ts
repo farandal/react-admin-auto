@@ -2,10 +2,12 @@
 interface AutoAdminAttribute {
     attribute: string;
     type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
+    tab?: string;
     label?: string;
     inList?: boolean;
+    extended?: boolean;
     readOnly?: boolean;
-    showTime?: boolean;
+    fieldOptions?: any;
 }
 export declare const AutoFilter: (props: any) => JSX.Element;
 export declare const AutoCreate: (props: any, { schema }: {
