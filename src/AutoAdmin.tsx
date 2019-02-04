@@ -78,6 +78,11 @@ const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[k
 const attributeToField = (input: AutoAdminAttribute) => {
   if (Array.isArray(input.type) && input.type.length > 0) {
     const inputType: string | AutoAdminAttribute = input.type[0];
+
+    /* Force the label to be the attribute name */
+    if (!input.label) {
+      input.label = input.attribute;
+    }
     /* Array of enum values – We use a SelectArrayInput */
     if (isEnum(inputType)) {
       return <ListStringsField label={input.label} source={input.attribute} map={inputType} />;
