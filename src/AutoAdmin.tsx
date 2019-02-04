@@ -136,6 +136,10 @@ const attributeToInput = (input: AutoAdminAttribute) => {
   if (input.readOnly === true) {
     return attributeToField(input);
   }
+  /* Force the label to be the attribute name */
+  if (!input.label) {
+    input.label = input.attribute;
+  }
   if (Array.isArray(input.type) && input.type.length > 0) {
     const inputType: string | AutoAdminAttribute = input.type[0];
     /* Array of enum values – We use a SelectArrayInput */
