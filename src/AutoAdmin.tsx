@@ -115,7 +115,14 @@ const attributeToField = (input: AutoAdminAttribute) => {
     case Boolean:
       return <BooleanField label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Date:
-      return <DateField label={input.label} showTime={input.fieldOptions && input.fieldOptions.showTime} source={input.attribute} options={input.fieldOptions} />;
+      return (
+        <DateField
+          label={input.label}
+          showTime={input.fieldOptions && input.fieldOptions.showTime}
+          source={input.attribute}
+          options={input.fieldOptions}
+        />
+      );
   }
   return <TextField label={input.label} source={input.attribute} options={input.fieldOptions} />;
 };
@@ -264,13 +271,16 @@ export const AutoEdit = (props: any, { schema }: { schema: AutoAdminAttribute[] 
 };
 
 export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
+  const schemaIncludesId = schema.filter(attribute => attribute.attribute === 'id').length !== 0;
   return (
     <List {...props} filters={<AutoFilter />}>
       <Datagrid>
-        <TextField
-          source='id'
-          onClick={() => (document.location = linkToRecord(props.basePath, props.record.id, 'show'))}
-        />
+        {!schemaIncludesId && (
+          <TextField
+            source='id'
+            onClick={() => (document.location = linkToRecord(props.basePath, props.record.id, 'show'))}
+          />
+        )}
         {schema.filter(attribute => attribute.inList !== false).map(attributeToField)}
         <ShowButton basePath={props.basePath} />
       </Datagrid>
