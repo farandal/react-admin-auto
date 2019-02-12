@@ -209,7 +209,10 @@ const USER_SCHEMA = [
 const TagAdmin = AutoResource('tags', { schema: TAG_SCHEMA });
 const PostAdmin = AutoResource('posts', { schema: POST_SCHEMA });
 const UserAdmin = AutoResource('users', {
-  schema: USER_SCHEMA
+  schema: USER_SCHEMA,
+  references: [
+    {reference: 'posts', target: 'author', schema: POST_SCHEMA}
+  ]
 });
 
 class AdminHome extends React.Component {

@@ -24,6 +24,7 @@ import {
   ReferenceArrayInput,
   ReferenceField,
   ReferenceInput,
+  ReferenceManyField,
   Resource,
   SelectArrayInput,
   SelectInput,
@@ -47,6 +48,13 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
+}
+
+interface AutoAdminReference {
+  reference: string;
+  target: string;
+  tab?: string;
+  schema: AutoAdminAttribute[];
 }
 
 const isEnum = (type: any) => typeof type === 'object' && !(type.attribute && type.type);
@@ -236,12 +244,23 @@ const tabbedForm = (schema: AutoAdminAttribute[]) => {
   );
 };
 
-const tabbedLayout = (schema: AutoAdminAttribute[]) => {
+const referenceTab = (reference: AutoAdminReference) => {
+  return (
+    <Tab key={reference.reference} label={reference.tab || reference.reference}>
+      <ReferenceManyField reference={reference.reference} target={reference.target} addLabel={false}>
+        {AutoDataGrid({}, { schema: reference.schema })}
+      </ReferenceManyField>
+    </Tab>
+  );
+};
+
+const tabbedLayout = (schema: AutoAdminAttribute[], references?: AutoAdminReference[]) => {
   return (
     <TabbedShowLayout>
       {groupByTabs(schema).map(groupOfAttributes => (
         <Tab label={groupOfAttributes[0].tab || 'Main'}>{groupOfAttributes.map(attributeToField)}</Tab>
       ))}
+      {references && references.map(reference => referenceTab(reference))}
     </TabbedShowLayout>
   );
 };
@@ -263,10 +282,13 @@ export const AutoCreate = (props: any, { schema }: { schema: AutoAdminAttribute[
   );
 };
 
-export const AutoShow = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
+export const AutoShow = (
+  props: any,
+  { schema, references }: { schema: AutoAdminAttribute[]; references?: AutoAdminReference[] }
+) => {
   return (
     <Show title={<AutoTitle schema={schema} />} {...props}>
-      {tabbedLayout(schema)}
+      {tabbedLayout(schema, references)}
     </Show>
   );
 };
@@ -279,27 +301,43 @@ export const AutoEdit = (props: any, { schema }: { schema: AutoAdminAttribute[] 
   );
 };
 
-export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
+export const AutoDataGrid = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
   const schemaIncludesId = schema.filter(attribute => attribute.attribute === 'id').length !== 0;
   return (
+    <Datagrid>
+      {!schemaIncludesId && (
+        <TextField
+          source='id'
+          onClick={
+            (props &&
+              props.record &&
+              (() => {
+                document.location = linkToRecord(props.basePath, props.record.id, 'show');
+              })) ||
+            undefined
+          }
+        />
+      )}
+      {schema.filter(attribute => attribute.inList !== false).map(attributeToField)}
+      <ShowButton basePath={props.basePath} />
+    </Datagrid>
+  );
+};
+
+export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
+  return (
     <List {...props} filters={<AutoFilter />}>
-      <Datagrid>
-        {!schemaIncludesId && (
-          <TextField
-            source='id'
-            onClick={() => (document.location = linkToRecord(props.basePath, props.record.id, 'show'))}
-          />
-        )}
-        {schema.filter(attribute => attribute.inList !== false).map(attributeToField)}
-        <ShowButton basePath={props.basePath} />
-      </Datagrid>
+      {AutoDataGrid(props, { schema })}
     </List>
   );
 };
 
-export const AutoResource = (modelName: string, { schema }: { schema: AutoAdminAttribute[] }) => {
+export const AutoResource = (
+  modelName: string,
+  { schema, references }: { schema: AutoAdminAttribute[]; references?: AutoAdminReference[] }
+) => {
   const list = (props: any) => AutoList(props, { schema });
-  const show = (props: any) => AutoShow(props, { schema });
+  const show = (props: any) => AutoShow(props, { schema, references });
   const edit = (props: any) => AutoEdit(props, { schema });
   const create = (props: any) => AutoCreate(props, { schema });
   const icon = 'address-book';
