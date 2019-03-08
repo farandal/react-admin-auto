@@ -8,6 +8,7 @@ interface AutoAdminAttribute {
     extended?: boolean;
     readOnly?: boolean;
     fieldOptions?: any;
+    action?: (params: any) => any;
 }
 interface AutoAdminReference {
     reference: string;

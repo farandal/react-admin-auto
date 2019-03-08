@@ -38,6 +38,7 @@ import {
   TextField,
   TextInput
 } from 'react-admin';
+import { Button } from '@material-ui/core';
 
 interface AutoAdminAttribute {
   attribute: string;
@@ -48,6 +49,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
+  action?: (params: any) => any;
 }
 
 interface AutoAdminReference {
@@ -83,6 +85,23 @@ ListStringsField.defaultProps = { addLabel: true };
 
 const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[key], name: key }));
 
+interface IRecord {
+  _id: string;
+}
+const MyAction = ({
+  record,
+  label,
+  action
+}: {
+  label: string;
+  record?: IRecord;
+  action: (record: IRecord) => void;
+}) => (
+  <Button value={label} onClick={() => action(record)}>
+    {label}
+  </Button>
+);
+
 const attributeToField = (input: AutoAdminAttribute) => {
   if (Array.isArray(input.type) && input.type.length > 0) {
     const inputType: string | AutoAdminAttribute = input.type[0];
@@ -95,7 +114,6 @@ const attributeToField = (input: AutoAdminAttribute) => {
     if (isEnum(inputType)) {
       return <ListStringsField label={input.label} source={input.attribute} map={inputType} />;
     }
-
     if (typeof inputType === 'string') {
       const [reference, sourceName] = inputType.split('.');
       return (
@@ -114,6 +132,11 @@ const attributeToField = (input: AutoAdminAttribute) => {
       );
     }
   }
+
+  if (input.action) {
+    return <MyAction label={input.label} action={input.action} />;
+  }
+
   if (typeof input.type === 'string') {
     const [reference, sourceName] = input.type.split('.');
     return (
@@ -172,6 +195,10 @@ const attributeToInput = (input: AutoAdminAttribute) => {
         </ArrayInput>
       );
     }
+  }
+
+  if (input.action) {
+    return <MyAction label={input.label} action={input.action} />;
   }
 
   /* Special cases – Passing strings, passing enums */
