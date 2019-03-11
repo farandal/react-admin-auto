@@ -11,20 +11,20 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "react": "^16.5.2",
-    "react-admin": "^2.4.0",
+    "react": "^16.8.1",
+    "react-admin": "^2.7.1",
     "react-admin-auto": "../"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.0",
-    "@types/react": "^16.4.18",
+    "@types/react": "^16.8.2",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "ra-data-fakerest": "^2.4.0",
+    "ra-data-fakerest": "^2.6.0",
     "react-scripts-ts": "^3.1.0",
-    "typescript": "^3.1.3"
+    "typescript": "^3.3.3"
   },
   "prettier": {
     "printWidth": 120,
