@@ -7,7 +7,7 @@ interface AutoAdminAttribute {
     extended?: boolean;
     readOnly?: boolean;
     fieldOptions?: any;
-    action?: (record: IRecord) => void | Element;
+    action?: (record: IRecord) => void & Element;
 }
 interface AutoAdminReference {
     reference: string;
@@ -15,7 +15,7 @@ interface AutoAdminReference {
     tab?: string;
     schema: AutoAdminAttribute[];
 }
-export interface IRecord {
+interface IRecord {
     _id: string;
 }
 export declare const AutoFilter: (props: any) => JSX.Element;

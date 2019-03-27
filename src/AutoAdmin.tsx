@@ -49,7 +49,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
-  action?: (record: IRecord) => void | Element;
+  action?: (record: IRecord) => void & Element;
 }
 
 interface AutoAdminReference {
@@ -86,14 +86,14 @@ ListStringsField.defaultProps = { addLabel: true };
 
 const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[key], name: key }));
 
-export interface IRecord {
+interface IRecord {
   _id: string;
 }
 
 const UserAction: React.FunctionComponent<{
   label: string;
   record?: IRecord;
-  action: (record: IRecord) => void | Element;
+  action: (record: IRecord) => void & Element;
 }> = ({ record, label, action }) => {
   if (typeof action === 'function') {
     return (
