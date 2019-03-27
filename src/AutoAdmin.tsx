@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import { linkToRecord } from 'ra-core';
 import * as React from 'react';
@@ -38,7 +39,6 @@ import {
   TextField,
   TextInput
 } from 'react-admin';
-import { Button } from '@material-ui/core';
 
 interface AutoAdminAttribute {
   attribute: string;
@@ -49,7 +49,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
-  action?: (params: any) => any;
+  action?: (record: IRecord) => void | React.ComponentType<IRecord>;
 }
 
 interface AutoAdminReference {
@@ -81,26 +81,35 @@ const ListStringsField = ({ record, source, map }: { record?: any; source: strin
     </>
   );
 };
+
 ListStringsField.defaultProps = { addLabel: true };
 
 const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[key], name: key }));
 
-interface IRecord {
+export interface IRecord {
   _id: string;
 }
-const MyAction = ({
-  record,
-  label,
-  action
-}: {
+
+const UserAction: React.FunctionComponent<{
   label: string;
   record?: IRecord;
-  action: (record: IRecord) => void;
-}) => (
-  <Button value={label} onClick={() => action(record)}>
-    {label}
-  </Button>
-);
+  action: (record: IRecord) => void | React.ComponentType<IRecord>;
+}> = ({ record, label, action }) => {
+  if (typeof action === 'function') {
+    return (
+      <Button value={label} onClick={() => action(record)}>
+        {label}
+      </Button>
+    );
+  }
+
+  if (React.isValidElement(action)) {
+    const Action = action as React.ComponentType<IRecord>;
+    return <Action _id={record._id} />;
+  }
+
+  return null;
+};
 
 const attributeToField = (input: AutoAdminAttribute) => {
   if (Array.isArray(input.type) && input.type.length > 0) {
@@ -134,7 +143,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
   }
 
   if (input.action) {
-    return <MyAction label={input.label} action={input.action} />;
+    return <UserAction label={input.label} action={input.action} />;
   }
 
   if (typeof input.type === 'string') {
@@ -198,7 +207,7 @@ const attributeToInput = (input: AutoAdminAttribute) => {
   }
 
   if (input.action) {
-    return <MyAction label={input.label} action={input.action} />;
+    return <UserAction label={input.label} action={input.action} />;
   }
 
   /* Special cases – Passing strings, passing enums */
