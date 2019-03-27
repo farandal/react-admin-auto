@@ -1,4 +1,3 @@
-import * as React from 'react';
 interface AutoAdminAttribute {
     attribute: string;
     type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
@@ -8,7 +7,7 @@ interface AutoAdminAttribute {
     extended?: boolean;
     readOnly?: boolean;
     fieldOptions?: any;
-    action?: (record: IRecord) => void | React.ComponentType<IRecord>;
+    action?: (record: IRecord) => void | Element;
 }
 interface AutoAdminReference {
     reference: string;

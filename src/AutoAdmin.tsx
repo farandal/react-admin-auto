@@ -49,7 +49,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
-  action?: (record: IRecord) => void | React.ComponentType<IRecord>;
+  action?: (record: IRecord) => void | Element;
 }
 
 interface AutoAdminReference {
@@ -93,7 +93,7 @@ export interface IRecord {
 const UserAction: React.FunctionComponent<{
   label: string;
   record?: IRecord;
-  action: (record: IRecord) => void | React.ComponentType<IRecord>;
+  action: (record: IRecord) => void | Element;
 }> = ({ record, label, action }) => {
   if (typeof action === 'function') {
     return (
