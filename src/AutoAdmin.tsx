@@ -40,6 +40,8 @@ import {
   TextInput
 } from 'react-admin';
 
+type ActionCallback = (record: IRecord) => void;
+
 interface AutoAdminAttribute {
   attribute: string;
   type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
@@ -49,7 +51,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
-  action?: (record: IRecord) => void & Element;
+  action?: ActionCallback | React.ComponentType<IRecord>;
 }
 
 interface AutoAdminReference {
@@ -93,11 +95,12 @@ interface IRecord {
 const UserAction: React.FunctionComponent<{
   label: string;
   record?: IRecord;
-  action: (record: IRecord) => void & Element;
+  action: ActionCallback | React.ComponentType<IRecord>;
 }> = ({ record, label, action }) => {
   if (typeof action === 'function') {
+    const callback = action as ActionCallback;
     return (
-      <Button value={label} onClick={() => action(record)}>
+      <Button value={label} onClick={() => callback(record)}>
         {label}
       </Button>
     );
