@@ -40,7 +40,7 @@ import {
   TextInput
 } from 'react-admin';
 
-type ActionCallback = (record: IRecord) => void;
+type ActionCallback = (id: string) => void;
 
 interface AutoAdminAttribute {
   attribute: string;
@@ -51,7 +51,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
-  action?: ActionCallback | React.ComponentType<IRecord>;
+  action?: ActionCallback | React.ComponentClass<IRecord>;
 }
 
 interface AutoAdminReference {
@@ -89,7 +89,7 @@ ListStringsField.defaultProps = { addLabel: true };
 const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[key], name: key }));
 
 interface IRecord {
-  _id: string;
+  id: string;
 }
 
 const UserAction: React.FunctionComponent<{
@@ -97,18 +97,18 @@ const UserAction: React.FunctionComponent<{
   record?: IRecord;
   action: ActionCallback | React.ComponentType<IRecord>;
 }> = ({ record, label, action }) => {
+  if (typeof action === 'function' && action.prototype && action.prototype.render) {
+    const Action = action as React.ComponentClass<IRecord>;
+    return <Action id={record.id} />;
+  }
+
   if (typeof action === 'function') {
     const callback = action as ActionCallback;
     return (
-      <Button value={label} onClick={() => callback(record)}>
+      <Button value={label} onClick={() => callback(record.id)}>
         {label}
       </Button>
     );
-  }
-
-  if (React.isValidElement(action)) {
-    const Action = action as React.ComponentType<IRecord>;
-    return <Action _id={record._id} />;
   }
 
   return null;

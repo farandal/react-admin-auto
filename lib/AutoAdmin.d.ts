@@ -1,5 +1,5 @@
 import * as React from 'react';
-declare type ActionCallback = (record: IRecord) => void;
+declare type ActionCallback = (id: string) => void;
 interface AutoAdminAttribute {
     attribute: string;
     type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
@@ -9,7 +9,7 @@ interface AutoAdminAttribute {
     extended?: boolean;
     readOnly?: boolean;
     fieldOptions?: any;
-    action?: ActionCallback | React.ComponentType<IRecord>;
+    action?: ActionCallback | React.ComponentClass<IRecord>;
 }
 interface AutoAdminReference {
     reference: string;
@@ -18,7 +18,7 @@ interface AutoAdminReference {
     schema: AutoAdminAttribute[];
 }
 interface IRecord {
-    _id: string;
+    id: string;
 }
 export declare const AutoFilter: (props: any) => JSX.Element;
 export declare const AutoCreate: (props: any, { schema }: {
