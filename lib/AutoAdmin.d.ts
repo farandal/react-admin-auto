@@ -8,6 +8,7 @@ interface AutoAdminAttribute {
     extended?: boolean;
     readOnly?: boolean;
     fieldOptions?: any;
+    validate?: (value: any) => string | undefined;
 }
 interface AutoAdminReference {
     reference: string;

@@ -162,7 +162,8 @@ enum Service {
 const USER_SCHEMA = [
   {
     attribute: 'name',
-    type: String
+    type: String,
+    validate: (name: string) => (name && name.length > 3 ? undefined : 'Name is too short')
   },
   {
     attribute: 'description',
@@ -184,7 +185,8 @@ const USER_SCHEMA = [
     attribute: 'email',
     type: String,
     tab: 'Contact Information',
-    inList: false
+    inList: false,
+    validate: (email: string) => (email && email.indexOf('@') > 0 ? undefined : 'Invalid email – At least add a @!')
   },
   {
     attribute: 'social',
@@ -210,9 +212,7 @@ const TagAdmin = AutoResource('tags', { schema: TAG_SCHEMA });
 const PostAdmin = AutoResource('posts', { schema: POST_SCHEMA });
 const UserAdmin = AutoResource('users', {
   schema: USER_SCHEMA,
-  references: [
-    {reference: 'posts', target: 'author', schema: POST_SCHEMA}
-  ]
+  references: [{ reference: 'posts', target: 'author', schema: POST_SCHEMA }]
 });
 
 class AdminHome extends React.Component {
