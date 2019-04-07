@@ -1,4 +1,4 @@
-/// <reference types="react" />
+import { ReactNode } from 'react';
 interface AutoAdminAttribute {
     attribute: string;
     type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
@@ -8,7 +8,7 @@ interface AutoAdminAttribute {
     extended?: boolean;
     readOnly?: boolean;
     fieldOptions?: any;
-    validate?: (value: any) => string | undefined;
+    validate?: (value: any) => ReactNode | string | undefined;
 }
 interface AutoAdminReference {
     reference: string;

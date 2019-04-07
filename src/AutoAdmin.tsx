@@ -49,7 +49,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
-  validate?: (value: any) => string | undefined;
+  validate?: (value: any) => ReactNode | string | undefined;
 }
 
 interface AutoAdminReference {
