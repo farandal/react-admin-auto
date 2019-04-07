@@ -38,7 +38,6 @@ import {
   TextField,
   TextInput
 } from 'react-admin';
-import { ReactNode } from 'react';
 
 interface AutoAdminAttribute {
   attribute: string;
@@ -49,7 +48,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
-  validate?: (value: any) => ReactNode | string | undefined;
+  validate?: (value: any) => Element | string | undefined;
 }
 
 interface AutoAdminReference {
@@ -267,8 +266,8 @@ const tabbedLayout = (schema: AutoAdminAttribute[], references?: AutoAdminRefere
   );
 };
 
-const validate = (schema: AutoAdminAttribute[]) => (values: { [field: string]: string | ReactNode }) => {
-  const errors: { [field: string]: string | ReactNode } = {};
+const validate = (schema: AutoAdminAttribute[]) => (values: { [field: string]: string | Element }) => {
+  const errors: { [field: string]: string | Element } = {};
   schema.forEach(field => {
     if (field.validate) {
       console.log({ validate: field.attribute });
