@@ -163,7 +163,7 @@ const USER_SCHEMA = [
   {
     attribute: 'name',
     type: String,
-    validate: (name: string) => (name && name.length > 3 ? undefined : 'Name is too short')
+    validate: (name: string) => (name && name.length > 3 ? undefined : <div>Name is too short</div>)
   },
   {
     attribute: 'description',

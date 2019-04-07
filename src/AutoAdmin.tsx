@@ -48,7 +48,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
-  validate?: (value: any) => Element | string | undefined;
+  validate?: (value: any) => JSX.Element | string | undefined;
 }
 
 interface AutoAdminReference {
@@ -266,8 +266,8 @@ const tabbedLayout = (schema: AutoAdminAttribute[], references?: AutoAdminRefere
   );
 };
 
-const validate = (schema: AutoAdminAttribute[]) => (values: { [field: string]: string | Element }) => {
-  const errors: { [field: string]: string | Element } = {};
+const validate = (schema: AutoAdminAttribute[]) => (values: { [field: string]: string | JSX.Element }) => {
+  const errors: { [field: string]: string | JSX.Element } = {};
   schema.forEach(field => {
     if (field.validate) {
       console.log({ validate: field.attribute });
