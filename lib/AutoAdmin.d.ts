@@ -10,6 +10,7 @@ interface AutoAdminAttribute {
     readOnly?: boolean;
     fieldOptions?: any;
     action?: ActionCallback | React.ComponentClass<IRecord>;
+    validate?: (value: any) => JSX.Element | string | undefined;
 }
 interface AutoAdminReference {
     reference: string;

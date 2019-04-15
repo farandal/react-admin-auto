@@ -52,6 +52,7 @@ interface AutoAdminAttribute {
   readOnly?: boolean;
   fieldOptions?: any;
   action?: ActionCallback | React.ComponentClass<IRecord>;
+  validate?: (value: any) => JSX.Element | string | undefined;
 }
 
 interface AutoAdminReference {
@@ -273,7 +274,7 @@ const groupByTabs = (schema: AutoAdminAttribute[]): AutoAdminAttribute[][] => {
 
 const tabbedForm = (schema: AutoAdminAttribute[]) => {
   return (
-    <TabbedForm>
+    <TabbedForm validate={validate(schema)}>
       {groupByTabs(schema).map(groupOfAttributes => (
         <FormTab label={groupOfAttributes[0].tab || 'Main'}>
           {groupOfAttributes.map(attribute => attributeToInput(attribute))}
@@ -302,6 +303,21 @@ const tabbedLayout = (schema: AutoAdminAttribute[], references?: AutoAdminRefere
       {references && references.map(reference => referenceTab(reference))}
     </TabbedShowLayout>
   );
+};
+
+const validate = (schema: AutoAdminAttribute[]) => (values: { [field: string]: string | JSX.Element }) => {
+  const errors: { [field: string]: string | JSX.Element } = {};
+  schema.forEach(field => {
+    if (field.validate) {
+      console.log({ validate: field.attribute });
+      try {
+        errors[field.attribute] = field.validate(values[field.attribute]);
+      } catch (e) {
+        errors[field.attribute] = 'Validation threw an exception: ' + e;
+      }
+    }
+  });
+  return errors;
 };
 
 export const AutoFilter = (props: any) => (
