@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import { linkToRecord } from 'ra-core';
 import * as React from 'react';
@@ -39,6 +40,8 @@ import {
   TextInput
 } from 'react-admin';
 
+type ActionCallback = (id: string) => void;
+
 interface AutoAdminAttribute {
   attribute: string;
   type: string | string[] | Object | DateConstructor | NumberConstructor | StringConstructor | AutoAdminAttribute[];
@@ -48,6 +51,7 @@ interface AutoAdminAttribute {
   extended?: boolean;
   readOnly?: boolean;
   fieldOptions?: any;
+  action?: ActionCallback | React.ComponentClass<IRecord>;
   validate?: (value: any) => JSX.Element | string | undefined;
 }
 
@@ -80,9 +84,36 @@ const ListStringsField = ({ record, source, map }: { record?: any; source: strin
     </>
   );
 };
+
 ListStringsField.defaultProps = { addLabel: true };
 
 const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[key], name: key }));
+
+interface IRecord {
+  id: string;
+}
+
+const UserAction: React.FunctionComponent<{
+  label: string;
+  record?: IRecord;
+  action: ActionCallback | React.ComponentType<IRecord>;
+}> = ({ record, label, action }) => {
+  if (typeof action === 'function' && action.prototype && action.prototype.render) {
+    const Action = action as React.ComponentClass<IRecord>;
+    return <Action id={record.id} />;
+  }
+
+  if (typeof action === 'function') {
+    const callback = action as ActionCallback;
+    return (
+      <Button value={label} onClick={() => callback(record.id)}>
+        {label}
+      </Button>
+    );
+  }
+
+  return null;
+};
 
 const attributeToField = (input: AutoAdminAttribute) => {
   if (Array.isArray(input.type) && input.type.length > 0) {
@@ -96,7 +127,6 @@ const attributeToField = (input: AutoAdminAttribute) => {
     if (isEnum(inputType)) {
       return <ListStringsField label={input.label} source={input.attribute} map={inputType} />;
     }
-
     if (typeof inputType === 'string') {
       const [reference, sourceName] = inputType.split('.');
       return (
@@ -115,6 +145,11 @@ const attributeToField = (input: AutoAdminAttribute) => {
       );
     }
   }
+
+  if (input.action) {
+    return <UserAction label={input.label} action={input.action} />;
+  }
+
   if (typeof input.type === 'string') {
     const [reference, sourceName] = input.type.split('.');
     return (
@@ -173,6 +208,10 @@ const attributeToInput = (input: AutoAdminAttribute) => {
         </ArrayInput>
       );
     }
+  }
+
+  if (input.action) {
+    return <UserAction label={input.label} action={input.action} />;
   }
 
   /* Special cases – Passing strings, passing enums */
