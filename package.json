@@ -20,11 +20,12 @@
   "devDependencies": {
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.0.9",
-    "typescript": "^3.3.4000"
+    "typescript": "^3.4.5"
   },
   "dependencies": {
     "react": "^16.8.1",
     "react-admin": "^2.7.1",
+    "react-admin-date-inputs": "^1.1.2",
     "react-dom": "^16.8.1"
   },
   "prettier": {
