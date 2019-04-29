@@ -14,7 +14,6 @@ import {
   Datagrid,
   DateField,
   DateInput,
-  DateTimeInput,
   Edit,
   Filter,
   FormTab,
@@ -40,6 +39,7 @@ import {
   TextField,
   TextInput
 } from 'react-admin';
+import { DateTimeInput } from 'react-admin-date-inputs';
 
 type ActionCallback = (id: string) => void;
 
