@@ -21,6 +21,7 @@ import {
   LongTextInput,
   NumberField,
   NumberInput,
+  Pagination,
   ReferenceArrayField,
   ReferenceArrayInput,
   ReferenceField,
@@ -289,10 +290,16 @@ const tabbedForm = (schema: AutoAdminAttribute[]) => {
   );
 };
 
+const ExtendedPagination = (props: any) => <Pagination rowsPerPageOptions={[25, 50, 100, 250, 500, 1000]} {...props} />;
+
 const referenceTab = (reference: AutoAdminReference) => {
   return (
     <Tab key={reference.reference} label={reference.tab || reference.reference}>
-      <ReferenceManyField reference={reference.reference} target={reference.target} addLabel={false}>
+      <ReferenceManyField
+        reference={reference.reference}
+        target={reference.target}
+        addLabel={false}
+        pagination={<ExtendedPagination />}>
         {AutoDataGrid({}, { schema: reference.schema })}
       </ReferenceManyField>
     </Tab>
@@ -385,7 +392,7 @@ export const AutoDataGrid = (props: any, { schema }: { schema: AutoAdminAttribut
 
 export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
   return (
-    <List {...props} filters={<AutoFilter />}>
+    <List {...props} filters={<AutoFilter />} pagination={<ExtendedPagination />}>
       {AutoDataGrid(props, { schema })}
     </List>
   );
