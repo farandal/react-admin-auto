@@ -18,15 +18,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/react": "^16.8.8",
-    "@types/react-dom": "^16.0.9",
+    "@types/react": "16.8.4",
+    "@types/react-dom": "16.8.4",
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "react": "^16.8.1",
-    "react-admin": "^2.7.1",
+    "react": "^16.8.6",
+    "react-admin": "^2.9.0",
     "react-admin-date-inputs": "^1.1.2",
-    "react-dom": "^16.8.1"
+    "react-dom": "^16.8.6"
   },
   "prettier": {
     "printWidth": 120,
