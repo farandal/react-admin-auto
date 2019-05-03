@@ -1,8 +1,14 @@
 # Change Log
 
-## Version 1.2
+## Version 1.4
 
-### 1.4
+### 1.4.2
+
+### DateTime picker
+
+- Using a nicer datetime picker than the one included with `react-admin`. It requires the following line to be included in `index.html` for the icons to display properly: `<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />`
+
+### 1.4.1
 
 ### Provide custom UI
 

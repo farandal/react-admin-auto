@@ -39,6 +39,7 @@ import {
   TextField,
   TextInput
 } from 'react-admin';
+import { DateTimeInput } from 'react-admin-date-inputs';
 
 type ActionCallback = (id: string) => void;
 
@@ -167,7 +168,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
       return (
         <DateField
           label={input.label}
-          showTime={input.fieldOptions && input.fieldOptions.showTime}
+          showTime={(input.fieldOptions && input.fieldOptions.showTime) || false}
           source={input.attribute}
           options={input.fieldOptions}
         />
@@ -236,7 +237,11 @@ const attributeToInput = (input: AutoAdminAttribute) => {
     case Boolean:
       return <BooleanInput label={input.label} source={input.attribute} options={input.fieldOptions} />;
     case Date:
-      return <DateInput label={input.label} source={input.attribute} options={input.fieldOptions} />;
+      return input.fieldOptions && input.fieldOptions.showTime ? (
+        <DateTimeInput label={input.label} source={input.attribute} options={{ ...input.fieldOptions, ampm: false }} />
+      ) : (
+        <DateInput label={input.label} source={input.attribute} options={input.fieldOptions} />
+      );
   }
   if (isEnum(input.type)) {
     return (
@@ -309,7 +314,6 @@ const validate = (schema: AutoAdminAttribute[]) => (values: { [field: string]: s
   const errors: { [field: string]: string | JSX.Element } = {};
   schema.forEach(field => {
     if (field.validate) {
-      console.log({ validate: field.attribute });
       try {
         errors[field.attribute] = field.validate(values[field.attribute]);
       } catch (e) {
