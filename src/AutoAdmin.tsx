@@ -133,7 +133,7 @@ const attributeToField = (input: AutoAdminAttribute) => {
       const [reference, sourceName] = inputType.split('.');
       return (
         <ReferenceArrayField label={input.label} linkType='show' source={input.attribute} reference={reference}>
-          <SingleFieldList>
+          <SingleFieldList linkType='show'>
             <ChipField source={sourceName} linkType='show' />
           </SingleFieldList>
         </ReferenceArrayField>
