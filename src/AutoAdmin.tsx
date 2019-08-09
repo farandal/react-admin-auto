@@ -341,11 +341,7 @@ const AutoTitle = ({ record, schema }: { record?: any; schema: AutoAdminAttribut
 };
 
 export const AutoCreate = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
-  return (
-    <Create title='Create a course' {...props}>
-      {tabbedForm(schema)}
-    </Create>
-  );
+  return <Create {...props}>{tabbedForm(schema)}</Create>;
 };
 
 export const AutoShow = (
