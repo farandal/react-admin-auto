@@ -133,8 +133,8 @@ const attributeToField = (input: AutoAdminAttribute) => {
       const [reference, sourceName] = inputType.split('.');
       return (
         <ReferenceArrayField label={input.label} linkType='show' source={input.attribute} reference={reference}>
-          <SingleFieldList>
-            <ChipField source={sourceName} />
+          <SingleFieldList linkType='show'>
+            <ChipField source={sourceName} linkType='show' />
           </SingleFieldList>
         </ReferenceArrayField>
       );
@@ -341,11 +341,7 @@ const AutoTitle = ({ record, schema }: { record?: any; schema: AutoAdminAttribut
 };
 
 export const AutoCreate = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
-  return (
-    <Create title='Create a course' {...props}>
-      {tabbedForm(schema)}
-    </Create>
-  );
+  return <Create {...props}>{tabbedForm(schema)}</Create>;
 };
 
 export const AutoShow = (
