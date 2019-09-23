@@ -91,19 +91,24 @@ ListStringsField.defaultProps = { addLabel: true };
 
 const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[key], name: key }));
 
-interface IRecord {
+export interface IRecord {
   id: string;
   record?: { [key: string]: any };
+  attribute?: string;
+  value?: any;
 }
 
 const UserAction: React.FunctionComponent<{
-  label: string;
+  label?: string;
   record?: IRecord;
+  source?: string;
   action: ActionCallback | React.ComponentType<IRecord>;
-}> = ({ record, label, action }) => {
+}> = ({ record, source, label, action }) => {
   if (typeof action === 'function' && action.prototype && action.prototype.render) {
     const Action = action as React.ComponentClass<IRecord>;
-    return <Action id={record.id} record={record} />;
+    return (
+      <Action id={record.id} record={record} attribute={source} value={record && source && record.record[source!]} />
+    );
   }
 
   if (typeof action === 'function') {
