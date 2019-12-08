@@ -35,11 +35,13 @@ export declare const AutoEdit: (props: any, { schema }: {
 export declare const AutoDataGrid: (props: any, { schema }: {
     schema: AutoAdminAttribute[];
 }) => JSX.Element;
-export declare const AutoList: (props: any, { schema }: {
+export declare const AutoList: (props: any, { schema, exporter }: {
     schema: AutoAdminAttribute[];
+    exporter?: any;
 }) => JSX.Element;
-export declare const AutoResource: (modelName: string, { schema, references }: {
+export declare const AutoResource: (modelName: string, { schema, references, exporter }: {
     schema: AutoAdminAttribute[];
     references?: AutoAdminReference[];
+    exporter?: any;
 }) => JSX.Element;
 export {};

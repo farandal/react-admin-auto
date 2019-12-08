@@ -386,9 +386,9 @@ export const AutoDataGrid = (props: any, { schema }: { schema: AutoAdminAttribut
   );
 };
 
-export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
+export const AutoList = (props: any, { schema, exporter }: { schema: AutoAdminAttribute[]; exporter?: any }) => {
   return (
-    <List {...props} filters={<AutoFilter />} pagination={<ExtendedPagination />}>
+    <List {...props} exporter={exporter} filters={<AutoFilter />} pagination={<ExtendedPagination />}>
       {AutoDataGrid(props, { schema })}
     </List>
   );
@@ -396,9 +396,9 @@ export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] 
 
 export const AutoResource = (
   modelName: string,
-  { schema, references }: { schema: AutoAdminAttribute[]; references?: AutoAdminReference[] }
+  { schema, references, exporter }: { schema: AutoAdminAttribute[]; references?: AutoAdminReference[]; exporter?: any }
 ) => {
-  const list = (props: any) => AutoList(props, { schema });
+  const list = (props: any) => AutoList(props, { schema, exporter });
   const show = (props: any) => AutoShow(props, { schema, references });
   const edit = (props: any) => AutoEdit(props, { schema });
   const create = (props: any) => AutoCreate(props, { schema });
