@@ -20,6 +20,7 @@ interface AutoAdminReference {
 }
 interface IRecord {
     id: string;
+    record?: any;
 }
 export declare const AutoFilter: (props: any) => JSX.Element;
 export declare const AutoCreate: (props: any, { schema }: {

@@ -93,6 +93,7 @@ const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[k
 
 interface IRecord {
   id: string;
+  record?: any;
 }
 
 const UserAction: React.FunctionComponent<{
@@ -102,7 +103,7 @@ const UserAction: React.FunctionComponent<{
 }> = ({ record, label, action }) => {
   if (typeof action === 'function' && action.prototype && action.prototype.render) {
     const Action = action as React.ComponentClass<IRecord>;
-    return <Action id={record.id} />;
+    return <Action id={record.id} record={record} />;
   }
 
   if (typeof action === 'function') {
