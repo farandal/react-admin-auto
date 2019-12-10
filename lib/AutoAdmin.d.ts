@@ -22,7 +22,13 @@ interface IRecord {
     id: string;
     record?: any;
 }
-export declare const AutoFilter: (props: any) => JSX.Element;
+export interface IReferenceFilter {
+    label: string;
+    source: string;
+    reference: string;
+    optionText: string;
+}
+export declare const AutoFilterGenerator: (referenceFilters?: IReferenceFilter[]) => (props: any) => JSX.Element;
 export declare const AutoCreate: (props: any, { schema }: {
     schema: AutoAdminAttribute[];
 }) => JSX.Element;
@@ -36,13 +42,15 @@ export declare const AutoEdit: (props: any, { schema }: {
 export declare const AutoDataGrid: (props: any, { schema }: {
     schema: AutoAdminAttribute[];
 }) => JSX.Element;
-export declare const AutoList: (props: any, { schema, exporter }: {
+export declare const AutoList: (props: any, { schema, exporter, referenceFilters }: {
     schema: AutoAdminAttribute[];
     exporter?: any;
+    referenceFilters?: IReferenceFilter[];
 }) => JSX.Element;
-export declare const AutoResource: (modelName: string, { schema, references, exporter }: {
+export declare const AutoResource: (modelName: string, { schema, references, exporter, referenceFilters }: {
     schema: AutoAdminAttribute[];
     references?: AutoAdminReference[];
     exporter?: any;
+    referenceFilters?: IReferenceFilter[];
 }) => JSX.Element;
 export {};
