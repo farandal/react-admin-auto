@@ -93,6 +93,7 @@ const enumToChoices = (e: any) => Object.keys(e).map((key: string) => ({ id: e[k
 
 interface IRecord {
   id: string;
+  record?: any;
 }
 
 const UserAction: React.FunctionComponent<{
@@ -102,7 +103,7 @@ const UserAction: React.FunctionComponent<{
 }> = ({ record, label, action }) => {
   if (typeof action === 'function' && action.prototype && action.prototype.render) {
     const Action = action as React.ComponentClass<IRecord>;
-    return <Action id={record.id} />;
+    return <Action id={record.id} record={record} />;
   }
 
   if (typeof action === 'function') {
@@ -331,11 +332,27 @@ const validate = (schema: AutoAdminAttribute[]) => (values: { [field: string]: s
   return errors;
 };
 
-export const AutoFilter = (props: any) => (
-  <Filter {...props}>
-    <TextInput label='Search' source='q' alwaysOn={true} />
-  </Filter>
-);
+export interface IReferenceFilter {
+  label: string; // filter label
+  source: string; // id field
+  reference: string; // model that references
+  optionText: string; // field from the model
+}
+export const AutoFilterGenerator = (referenceFilters?: IReferenceFilter[]) => (props: any) => {
+  console.log(referenceFilters);
+  return (
+    <Filter {...props}>
+      <TextInput label='Search' source='q' alwaysOn={true} />
+      {referenceFilters &&
+        referenceFilters.length > 0 &&
+        referenceFilters.map(r => (
+          <ReferenceInput label={r.label} source={r.source} reference={r.reference} allowEmpty>
+            <SelectInput optionText={r.optionText} />
+          </ReferenceInput>
+        ))}
+    </Filter>
+  );
+};
 const AutoTitle = ({ record, schema }: { record?: any; schema: AutoAdminAttribute[] }) => {
   return <span>Edit {record ? `"${record[schema[0].attribute]}"` : ''}</span>;
 };
@@ -386,9 +403,17 @@ export const AutoDataGrid = (props: any, { schema }: { schema: AutoAdminAttribut
   );
 };
 
-export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] }) => {
+export const AutoList = (
+  props: any,
+  {
+    schema,
+    exporter,
+    referenceFilters
+  }: { schema: AutoAdminAttribute[]; exporter?: any; referenceFilters?: IReferenceFilter[] }
+) => {
+  const CustomAutoFilter = AutoFilterGenerator(referenceFilters);
   return (
-    <List {...props} filters={<AutoFilter />} pagination={<ExtendedPagination />}>
+    <List {...props} exporter={exporter} filters={<CustomAutoFilter />} pagination={<ExtendedPagination />}>
       {AutoDataGrid(props, { schema })}
     </List>
   );
@@ -396,9 +421,19 @@ export const AutoList = (props: any, { schema }: { schema: AutoAdminAttribute[] 
 
 export const AutoResource = (
   modelName: string,
-  { schema, references }: { schema: AutoAdminAttribute[]; references?: AutoAdminReference[] }
+  {
+    schema,
+    references,
+    exporter,
+    referenceFilters
+  }: {
+    schema: AutoAdminAttribute[];
+    references?: AutoAdminReference[];
+    exporter?: any;
+    referenceFilters?: IReferenceFilter[];
+  }
 ) => {
-  const list = (props: any) => AutoList(props, { schema });
+  const list = (props: any) => AutoList(props, { schema, exporter, referenceFilters });
   const show = (props: any) => AutoShow(props, { schema, references });
   const edit = (props: any) => AutoEdit(props, { schema });
   const create = (props: any) => AutoCreate(props, { schema });
