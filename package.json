@@ -1,6 +1,6 @@
 {
   "name": "react-admin-auto",
-  "version": "1.4.2",
+  "version": "4.0.0",
   "description": "An addition to react-admin that creates automatic list, show, edit and create views",
   "main": "main.js",
   "scripts": {
@@ -18,15 +18,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/react": "^16.8.8",
-    "@types/react-dom": "^16.0.9",
-    "typescript": "^3.4.5"
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "typescript": "^4.4.0"
   },
   "dependencies": {
-    "react": "^16.8.1",
-    "react-admin": "^2.7.1",
-    "react-admin-date-inputs": "^1.1.2",
-    "react-dom": "^16.8.1"
+    "@material-ui/core": "^4.12.1",
+    "@material-ui/icons": "^4.11.2",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-admin": "^4.0.3"
   },
   "prettier": {
     "printWidth": 120,
