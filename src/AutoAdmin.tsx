@@ -532,9 +532,9 @@ export const AutoTabbedForm: React.FC<IAutoTabbedForm> = ({ schema, onSubmit,onE
 
         } catch(error) {
           if(onError) { onError(error); }
-          let response = JSON.parse(localStorage.getItem("lastValidationError"));
-          localStorage.removeItem("lastValidationError");
-          return response;
+          //let response = JSON.parse(localStorage.getItem("lastValidationError"));
+          //localStorage.removeItem("lastValidationError");
+          return error;
         }
     },
     [create,onCreate,onError]
@@ -554,9 +554,9 @@ export const AutoTabbedForm: React.FC<IAutoTabbedForm> = ({ schema, onSubmit,onE
         if(onError) { onError(error); }
         /* @TODO: HACK due react-admin dataProvider error */
         /* https://github.com/marmelab/react-admin/issues/7679 */
-        let response = JSON.parse(localStorage.getItem("lastValidationError"));
-        localStorage.removeItem("lastValidationError");
-        return response;
+       // let response = JSON.parse(localStorage.getItem("lastValidationError"));
+       // localStorage.removeItem("lastValidationError");
+        return error;
       }
   },
   [update,updateLoading,onError]
